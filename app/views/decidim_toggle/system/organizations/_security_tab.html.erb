@@ -1,0 +1,30 @@
+<% organization = local_assigns[:organization] || (f&.object&.respond_to?(:id) && Decidim::Organization.find_by(id: f.object.id)) || f&.object %>
+<% tab_form = tab.form_class.from_model(organization) %>
+<%= form_with url: decidim_toggle_update_settings_tab_organization_path(organization, tab_id: tab.identifier),
+              model: tab_form,
+              scope: :organization,
+              builder: Decidim::Toggle::SettingsFormBuilder,
+              method: :patch,
+              html: { id: "settings_tab_form_#{tab.identifier}" },
+              local: true do |tf| %>
+  <div class="form__wrapper">
+    <fieldset>
+      <legend class="form-legend">Access to the organization</legend>
+      <p>
+        <%= tf.check_box :force_users_to_authenticate_before_access_organization %>
+        <%= tf.label :force_users_to_authenticate_before_access_organization, "Force users to authenticate before accessing the organization" %>
+      </p>
+
+      <p>
+        <label class="form-label">Sign in mode</label>
+        <%= tf.fields_for_names(:users_registration_mode) %>
+      </p>
+    </fieldset>
+
+    <fieldset>
+      <legend class="form-legend">Content security policy</legend>
+      <%= tf.fields_for_names("default-src", "img-src", "media-src", "script-src", "style-src", "frame-src", "font-src", "connect-src") %>
+    </fieldset>
+  </div>
+
+<% end %>

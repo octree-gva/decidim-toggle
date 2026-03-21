@@ -25,9 +25,25 @@ bundle install
 
 ## Extending (other modules)
 
-- **Add a tab**: register a new tab in the settings tabs (API to be defined).
-- **Form**: pass the same organization form builder `f` so data is submitted with the organization form.
-- **Custom form view**: you can define a custom partial for your tab content.
+### System UI tabs
+
+Register a block with `Decidim::Toggle.settings_tabs :organization_settings` (after the gem’s initializer) and call `add_tab` with your `Decidim::Form` and `Decidim::Command`, or `add_custom_tab` for a vanilla Decidim partial.
+
+Optional **`module_name:`** (e.g. `:decidim_geo`) ties the tab to JSON config storage and to the runtime API below. Use **one tab per `module_name`** for config.
+
+### JSON module config (no extra tables)
+
+Run `rails db:migrate` so `decidim_toggle_organization_module_configs` exists.
+
+- **`Decidim::Toggle.save_config!(organization, :your_module, { "enabled" => true })`** — shallow-merges into the JSON blob by default; pass **`merge: false`** to replace the whole object.
+- **`Decidim::Toggle.config_for(organization, :your_module)`** — if a form is registered for that `module_name` via `add_tab ..., module_name:`, returns a **`Decidim::Toggle::ModuleConfigurationPresenter`** (typed readers, `enabled?`, nil → `[]` / `{}` for array/hash attributes). Otherwise returns an indifferent hash of raw JSON.
+
+Use **`Decidim::Toggle::ModuleConfigForm`** on your form: set **`self.module_config_name = "your_module"`** and implement attributes as usual; **`from_model(organization)`** loads from JSON. Submit the system tab through **`Decidim::Toggle::UpdateModuleConfigCommand`** when you do not need custom persistence logic.
+
+### Tab layout
+
+- **Form**: use the same organization form builder `f` so the tab panels submit with the main organization form where applicable.
+- **Custom form view**: set **`form_layout_partial:`** on `add_tab` or rely on the default `form_tab` partial.
 
 ## Development and checks (Docker)
 

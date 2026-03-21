@@ -8,11 +8,15 @@ en:
           emails: "Emails"
           language: "Language"
           security: "Security"
+          authorizations: "Authorizations"
           file_upload: "File upload"
           language_placeholder: "Default and available locales (configured in the form above)."
         form_tab:
           save: "Save"
           success: "Settings updated successfully."
+        authorizations_tab:
+          legend: "Verification workflows"
+          hint: "Choose which verification methods participants can use in this organization."
         language_tab:
           legend: "Available and default locale"
           locale: "Locale"

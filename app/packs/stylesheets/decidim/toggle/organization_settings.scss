@@ -1,0 +1,116 @@
+// Organization settings form + accordion tabs (decidim-toggle).
+// Loaded only when the tabbed settings partial is rendered (decidim system).
+
+#decidim-toggle-settings-tabs {
+  margin-top: 1rem;
+
+  .tab-x-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem 0.5rem;
+    list-style: none;
+    margin: 0 0 1rem;
+    padding: 0;
+    border-bottom: 1px solid rgba(116, 129, 144, 0.35);
+  }
+
+  .tab-x-container > li {
+    margin: 0;
+    padding: 0;
+  }
+
+  .tab-x {
+    appearance: none;
+    background: rgba(243, 244, 247, 1);
+    border: 1px solid transparent;
+    border-bottom: none;
+    border-radius: 0.25rem 0.25rem 0 0;
+    color: var(--secondary, #155abf);
+    cursor: pointer;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    line-height: 1.25;
+    margin: 0;
+    padding: 0.5rem 0.75rem;
+    transition: background-color 0.15s ease, border-color 0.15s ease;
+  }
+
+  .tab-x:hover,
+  .tab-x:focus-visible {
+    background: rgba(243, 244, 247, 1);
+    border-color: rgba(116, 129, 144, 0.35);
+    outline: none;
+  }
+
+  .tab-x[aria-expanded="true"] {
+    background: #fff;
+    border-color: rgba(116, 129, 144, 0.35);
+    border-bottom-color: #fff;
+    margin-bottom: -1px;
+    position: relative;
+    z-index: 1;
+  }
+
+  > [id^="panel-toggle-"] {
+    clear: both;
+  }
+
+  > [id^="panel-toggle-"][aria-hidden="true"] {
+    display: none;
+  }
+
+  .form__wrapper {
+    margin-top: 0;
+    gap: 0;
+  }
+
+  .form__wrapper .field {
+    margin-bottom: 12px !important;
+  }
+
+  .form__wrapper .field:last-child {
+    margin-bottom: 0;
+  }
+
+  fieldset {
+    border: 0px solid transparent;
+    border-radius: 0;
+    margin: 0 0 0.5rem;
+    padding: 0.5rem 0.5rem 0.25rem;
+  }
+
+  fieldset:last-of-type {
+    margin-bottom: 0.5rem;
+  }
+
+  .form-legend, legend, legend > label{
+    font-size: 16px;
+    font-weight: 600;
+    padding: 0;
+    text-transform: uppercase;
+    margin-top: 1rem;
+  }
+  label {
+    font-size: 14px;
+    font-weight: 400;
+    padding: 0;
+    text-transform: none;
+  }
+  input {
+    margin: 6px 0;
+    padding: 2px 8px;
+  }
+  input[type="checkbox"], input[type="radio"] {
+    margin: 6px 8px 6px 0;
+    padding: 2px 8px;
+  }
+
+  .table-fields {
+    margin-bottom: 1rem;
+    width: 100%;
+  }
+
+  .button.button__sm.button__primary {
+    margin-top: 1rem;
+  }
+}

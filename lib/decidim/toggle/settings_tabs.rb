@@ -18,6 +18,7 @@ module Decidim
         registry.configurations.each do |configuration|
           context.instance_exec(self, **options, &configuration)
         end
+        registry.mark_configurations_applied!
       end
 
       # Tab with form + command: common layout renders form.all_fields and submits to generic controller.
@@ -25,10 +26,11 @@ module Decidim
       # @param label [String] Tab button label
       # @param form [Class] Decidim::Form subclass (must respond to .from_model(organization))
       # @param command [Class] Decidim::Command that receives (organization, form)
-      # @param options [Hash] :position, :if, :open
+      # @param options [Hash] :position, :if, :open, :form_layout_partial (optional partial path instead of default form_tab)
       def add_tab(identifier, label, form:, command:, **options)
         options = { position: (1 + @items.length) }.merge(options)
-        registry.register_form_tab(identifier, form, command)
+        module_name = options[:module_name]
+        registry.register_form_tab(identifier, form, command, module_name:)
         @items << SettingsTabItem.new(identifier, label, options.merge(form_class: form, command_class: command))
       end
 

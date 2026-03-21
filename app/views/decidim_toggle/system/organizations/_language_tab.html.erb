@@ -1,25 +1,42 @@
-<% locale_form = Decidim::Toggle::UpdateLocaleForm.from_model(@organization) %>
-<%= form_with url: decidim_toggle_update_locale_organization_path(@organization), scope: :organization, method: :patch, html: { id: "locale_tab_form" }, local: true do |lf| %>
+<% organization = local_assigns[:organization] || (f&.object&.respond_to?(:id) && Decidim::Organization.find_by(id: f.object.id)) || f&.object %>
+<% tab_form = tab.form_class.from_model(organization) %>
+<%= form_with url: decidim_toggle_update_settings_tab_organization_path(organization, tab_id: tab.identifier),
+              model: tab_form,
+              scope: :organization,
+              builder: Decidim::Toggle::SettingsFormBuilder,
+              method: :patch,
+              html: { id: "settings_tab_form_#{tab.identifier}" },
+              local: true do |tf| %>
+  <div class="form__wrapper">
     <fieldset>
-      <legend class="form-label"><%= t("legend", scope: "decidim_toggle.system.organizations.language_tab") %></legend>
+      <legend class="form-legend"><%= t("decidim_toggle.system.organizations.language_tab.legend") %></legend>
       <table class="table-fields">
         <thead>
           <tr>
-            <th><%= t("locale", scope: "decidim_toggle.system.organizations.language_tab") %></th>
-            <th><%= t("enabled", scope: "decidim_toggle.system.organizations.language_tab") %></th>
-            <th><%= t("default", scope: "decidim_toggle.system.organizations.language_tab") %></th>
+            <th><%= t("decidim_toggle.system.organizations.language_tab.locale") %></th>
+            <th><%= t("decidim_toggle.system.organizations.language_tab.enabled") %></th>
+            <th><%= t("decidim_toggle.system.organizations.language_tab.default") %></th>
           </tr>
         </thead>
         <tbody>
           <% localized_locales(I18n.available_locales).each do |locale| %>
             <tr>
               <td><%= locale.name %></td>
-              <td><%= check_box_tag "organization[available_locales][#{locale.id}]", locale.id, locale_form.available_locales.include?(locale.id), class: "!m-0" %></td>
-              <td><%= radio_button_tag "organization[default_locale]", locale.id, locale_form.default_locale == locale.id, class: "!m-0" %></td>
+              <td><%= check_box_tag "organization[available_locales][#{locale.id}]", locale.id, Array(tab_form.available_locales).map(&:to_s).include?(locale.id.to_s), class: "!m-0" %></td>
+              <td><%= radio_button_tag "organization[default_locale]", locale.id, tab_form.default_locale.to_s == locale.id.to_s, class: "!m-0" %></td>
             </tr>
           <% end %>
         </tbody>
       </table>
     </fieldset>
-    <%= lf.submit t("save", scope: "decidim_toggle.system.organizations.language_tab"), class: "button button__sm button__primary" %>
-  <% end %>
+    <fieldset>
+      <legend class="form-legend">Machine translations</legend>
+        <%= tf.fields_for_names(:enable_machine_translations) %>
+
+       <p>
+        <label class="form-legend" for="organization[machine_translation_display_priority]">Text version participant will see first</label>
+        <%= tf.fields_for_names(:machine_translation_display_priority) %>
+       </p>
+    </fieldset>
+  </div>
+<% end %>

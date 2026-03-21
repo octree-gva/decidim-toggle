@@ -4,22 +4,17 @@ require "spec_helper"
 
 module Decidim
   module Toggle
-    describe "Deface overrides for organizations edit" do
-      let(:virtual_path) { "decidim/system/organizations/edit" }
-
-      let(:overrides_list) do
-        found = Deface::Override.find(virtual_path:)
-        found.is_a?(Hash) ? found.values.flatten : Array(found)
+    describe "System organization advanced settings override" do
+      let(:view_path) do
+        Decidim::Toggle::Engine.root.join("app/views/decidim_toggle/system/organizations/_settings_tabs.html.erb")
       end
 
-      it "registers overrides for decidim/system/organizations/edit" do
-        toggle_overrides = overrides_list.select { |o| o.name.to_s.include?("decidim_toggle") }
-        expect(toggle_overrides.size).to eq(1)
-      end
-
-      it "has override to replace advanced settings with tabbed settings" do
-        replace = overrides_list.find { |o| o.name.to_s == "decidim_toggle_replace_advanced_settings_button" }
-        expect(replace).to be_present
+      it "provides settings tabs partial that builds tabs and passes the form builder" do
+        expect(view_path).to exist
+        content = File.read(view_path)
+        expect(content).to include("SettingsTabs")
+        expect(content).to include("f:")
+        expect(content).to include("organization")
       end
     end
   end

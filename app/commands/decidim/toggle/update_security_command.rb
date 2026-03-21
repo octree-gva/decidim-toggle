@@ -14,7 +14,6 @@ module Decidim
         transaction do
           organization.force_users_to_authenticate_before_access_organization = form.force_users_to_authenticate_before_access_organization
           organization.users_registration_mode = form.users_registration_mode
-          organization.available_authorizations = form.clean_available_authorizations
           organization.content_security_policy = form.content_security_policy
           organization.save!
         end

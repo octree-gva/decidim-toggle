@@ -7,7 +7,6 @@ module Decidim
 
       attribute :force_users_to_authenticate_before_access_organization, Boolean
       attribute :users_registration_mode, String
-      attribute :available_authorizations, [String]
       attribute :"default-src", String
       attribute :"img-src", String
       attribute :"media-src", String
@@ -25,7 +24,6 @@ module Decidim
         attrs = {
           force_users_to_authenticate_before_access_organization: organization.force_users_to_authenticate_before_access_organization,
           users_registration_mode: organization.users_registration_mode,
-          available_authorizations: organization.available_authorizations || [],
           "default-src": csp["default-src"],
           "img-src": csp["img-src"],
           "media-src": csp["media-src"],
@@ -50,10 +48,6 @@ module Decidim
         end
       end
 
-      def self.collection_for_available_authorizations
-        Decidim.authorization_workflows.map { |w| [w.name, w.description] }
-      end
-
       def content_security_policy
         {
           "default-src" => send(:"default-src"),
@@ -67,9 +61,6 @@ module Decidim
         }.compact_blank
       end
 
-      def clean_available_authorizations
-        Array(available_authorizations).select(&:present?)
-      end
     end
   end
 end

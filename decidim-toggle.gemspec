@@ -14,7 +14,7 @@ Gem::Specification.new do |s|
   s.name = "decidim-toggle"
   s.summary = "Feature toggle for Decidim system administration"
   s.description = "Tabbed System organization settings (registration, emails, language, security, other) " \
-                  "with an API for other modules to add tabs. Uses Deface for decidim-system view overrides."
+                  "with an API for other modules to add tabs. Overrides decidim-system organization views via prepended paths."
 
   s.files = Dir.chdir(__dir__) do
     tracked = `git ls-files -z 2>/dev/null`.split("\x0").reject(&:empty?)
@@ -29,7 +29,6 @@ Gem::Specification.new do |s|
 
   s.add_dependency "decidim-core", Decidim::Toggle.decidim_version
   s.add_dependency "decidim-system", Decidim::Toggle.decidim_version
-  s.add_dependency "deface", "~> 1.9"
 
   s.metadata["rubygems_mfa_required"] = "true"
 end

@@ -1,4 +1,5 @@
 <%# Tabs use same logic as Decidim: data-component="accordion" (0.29) + tab-x-container. See decidim-core tab_panels cell, design accordions. %>
+<%= append_stylesheet_pack_tag "decidim_toggle", media: "all" %>
 <% organization = local_assigns[:organization] %>
 <% tabs = Decidim::Toggle::SettingsTabs.new(:organization_settings) %>
 <% tabs.build_for(self) %>
@@ -16,22 +17,15 @@
   <% tabs.items.each do |tab| %>
     <div id="panel-toggle-<%= tab.identifier %>" class="border-2 rounded border-background p-4 form__wrapper mt-8" aria-hidden="<%= tab.open? ? "false" : "true" %>">
       <% if tab.form_tab? %>
-        <%= render "decidim_toggle/system/organizations/form_tab", tab:, f: (defined?(f) && f), organization: %>
+        <% if tab.form_layout_partial.present? %>
+          <%= render tab.form_layout_partial, tab:, f: f, organization: %>
+        <% else %>
+          <%= render "decidim_toggle/system/organizations/form_tab", tab:, f: f, organization: %>
+        <% end %>
       <% else %>
-        <%= render partial: tab.partial, locals: { f: (defined?(f) && f) }.merge(tab.extra_locals) %>
+        <%= render partial: tab.partial, locals: { f: f }.merge(local_assigns) %>
       <% end %>
+      <%= f.submit t("save", scope: "decidim_toggle.system.organizations.form_tab"), class: "button button__sm button__primary" %>
     </div>
   <% end %>
 </div>
-<% if defined?(f) && f %>
-  <div class="form__wrapper-block flex-col-reverse md:flex-row justify-between mt-8">
-    <% if organization&.users&.first&.invitation_pending? %>
-      <%= link_to t(".resend_invitation", default: t("decidim.system.organizations.edit.resend_invitation")),
-                  resend_invitation_organization_path(organization),
-                  method: :post,
-                  class: "button button__sm md:button__lg button__transparent-secondary",
-                  data: { confirm: t(".confirm_resend_invitation", default: t("decidim.system.organizations.edit.confirm_resend_invitation")) } %>
-    <% end %>
-    <%= f.submit t("decidim.system.actions.save"), class: "button button__sm md:button__lg button__primary" %>
-  </div>
-<% end %>

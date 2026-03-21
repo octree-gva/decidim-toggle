@@ -10,6 +10,12 @@ module Decidim
       attribute :enable_machine_translations, Boolean
       attribute :machine_translation_display_priority, String
 
+      # Decidim::Form delegates :available_locales to current_organization; this form is often
+      # built without context (e.g. system settings tabs), so prefer the attribute value.
+      def available_locales
+        attributes["available_locales"]
+      end
+
       validates :available_locales, presence: true
       validates :default_locale, presence: true
       validates :machine_translation_display_priority,
@@ -20,14 +26,28 @@ module Decidim
       validate :default_locale_in_i18n
 
       def self.from_model(organization)
-        attrs = {
-          available_locales: organization.available_locales,
-          default_locale: organization.default_locale
-        }
+        attrs = locale_attrs_from(organization)
         attrs[:enable_machine_translations] = organization.enable_machine_translations if organization.respond_to?(:enable_machine_translations)
         attrs[:machine_translation_display_priority] = organization.machine_translation_display_priority if organization.respond_to?(:machine_translation_display_priority)
         from_params(attrs)
       end
+
+      def self.locale_attrs_from(organization)
+        record =
+          if organization.is_a?(Decidim::Organization)
+            organization
+          elsif organization.respond_to?(:id) && organization.id.present?
+            Decidim::Organization.find_by(id: organization.id)
+          end
+
+        source = record || organization
+
+        {
+          available_locales: Array(source.try(:available_locales)).map(&:to_s),
+          default_locale: source.try(:default_locale)&.to_s
+        }
+      end
+      private_class_method :locale_attrs_from
 
       def self.collection_for_machine_translation_display_priority
         return [] unless defined?(Decidim::Organization::AVAILABLE_MACHINE_TRANSLATION_DISPLAY_PRIORITIES)
