@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+#
+# Syncs lib/decidim/toggle/version.rb with package.json version (single source: npm version).
+#
+set -euo pipefail
+
+PACKAGE_VERSION=$(jq -r '.version' package.json)
+
+file="lib/decidim/toggle/version.rb"
+if [[ -f "$file" ]]; then
+  sed -i "/# DO NOT UPDATE MANUALLY/s/\".*\"/\"${PACKAGE_VERSION}\"/" "$file"
+fi
+
+echo "$PACKAGE_VERSION"

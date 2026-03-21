@@ -1,0 +1,10 @@
+/.bundle/
+/vendor/
+/node_modules/
+/coverage/
+*.gem
+.env
+.env.*
+!.env.example
+spec/decidim_dummy_app
+

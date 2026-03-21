@@ -1,0 +1,23 @@
+en:
+  decidim_toggle:
+    system:
+      organizations:
+        settings_tabs:
+          name: "Name"
+          registration: "Registration"
+          emails: "Emails"
+          language: "Language"
+          security: "Security"
+          file_upload: "File upload"
+          language_placeholder: "Default and available locales (configured in the form above)."
+        form_tab:
+          save: "Save"
+          success: "Settings updated successfully."
+        language_tab:
+          legend: "Available and default locale"
+          locale: "Locale"
+          enabled: "Enabled"
+          default: "Default"
+          save: "Save locales"
+          success: "Locales updated successfully."
+          error: "Could not update locales."
