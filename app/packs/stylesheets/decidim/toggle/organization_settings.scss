@@ -9,7 +9,7 @@
     flex-wrap: wrap;
     gap: 0.25rem 0.5rem;
     list-style: none;
-    margin: 0 0 1rem;
+    margin: 0;
     padding: 0;
     border-bottom: 1px solid rgba(116, 129, 144, 0.35);
   }
@@ -53,6 +53,8 @@
 
   > [id^="panel-toggle-"] {
     clear: both;
+    border: 1px solid #EEE;
+    padding: 16px 8px;
   }
 
   > [id^="panel-toggle-"][aria-hidden="true"] {
