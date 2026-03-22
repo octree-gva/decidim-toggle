@@ -3,6 +3,8 @@
 require "rails"
 require "decidim/core"
 require "decidim/system"
+# After core so Decidim::FormBuilder autoload pulls Map, TranslatableAttributes, etc.
+require "decidim/toggle/settings_form_builder"
 require "decidim/toggle/organization_settings_tabs"
 
 module Decidim

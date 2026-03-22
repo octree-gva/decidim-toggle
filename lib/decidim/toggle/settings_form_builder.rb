@@ -1,12 +1,10 @@
 # frozen_string_literal: true
 
-require "decidim/translatable_attributes"
-require "decidim/form_builder"
-
 module Decidim
   module Toggle
     # Form builder for add_tab form tabs. Renders all form attributes via #all_fields.
     # Form classes can define class method collection_for_<attribute> to return [[value, label], ...] for collection inputs.
+    # Loaded from the engine after +require "decidim/core"+ so +Decidim::FormBuilder+ autoload works.
     class SettingsFormBuilder < Decidim::FormBuilder
       def all_fields
         fields = attribute_names.map do |name|

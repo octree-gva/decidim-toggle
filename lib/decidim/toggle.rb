@@ -4,7 +4,6 @@ require "decidim/toggle/version"
 require "decidim/toggle/settings_tab_registry"
 require "decidim/toggle/settings_tab_item"
 require "decidim/toggle/settings_tabs"
-require "decidim/toggle/settings_form_builder"
 require "decidim/toggle/module_config"
 require "decidim/toggle/engine"
 
