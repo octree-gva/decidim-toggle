@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require "decidim/translatable_attributes"
 require "decidim/form_builder"
 
 module Decidim
