@@ -7,4 +7,4 @@
 .env.*
 !.env.example
 spec/decidim_dummy_app
-
+.rspec-failures
