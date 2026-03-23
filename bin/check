@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+# RuboCop + erblint + RSpec (matches CI ruby::rubocop, ruby::erb, ruby::rspec).
+# Does not run Prettier or Crowdin — see README / CONTRIBUTING "bin/check vs CI".
+set -euo pipefail
+cd "$(dirname "$0")/.."
+unset DATABASE_URL
+export RAILS_ENV=test
+bundle exec rubocop .
+bundle exec erblint --lint-all --enable-all-linters
+bundle exec rspec "$@"

@@ -6,14 +6,19 @@ module Decidim
   module Toggle
     describe UpdateLocaleCommand do
       let(:organization) { create(:organization) }
+      let(:rebuild_search_task) { instance_double(Rake::Task, invoke: nil, reenable: nil) }
 
       before do
-        task = instance_double(Rake::Task, invoke: nil, reenable: nil)
+        allow(Rails.application).to receive(:load_tasks)
         allow(Rake::Task).to receive(:[]).and_call_original
-        allow(Rake::Task).to receive(:[]).with("decidim:locales:rebuild_search").and_return(task)
+        allow(Rake::Task).to receive(:[]).with("decidim:locales:rebuild_search").and_return(rebuild_search_task)
       end
 
       it "updates locales and rebuilds search index" do
+        expect(Rails.application).to receive(:load_tasks).ordered
+        expect(rebuild_search_task).to receive(:reenable).ordered
+        expect(rebuild_search_task).to receive(:invoke).ordered
+
         form = UpdateLocaleForm.from_model(organization)
         form.available_locales = %w(en)
         form.default_locale = "en"

@@ -10,6 +10,6 @@ preserve_hierarchy: true
 files: [
   {
     "source": "/config/locales/en.yml",
-    "translation": "/config/locales/%two_letters_code%.yml",
+    "translation": "/config/locales/decidim_toggle_%two_letters_code%.yml",
   }
 ]

@@ -1,0 +1,8 @@
+<%= decidim_form_for(local_assigns[:form], url: organization_path(organization)) do |f| %>
+  <div class="form__wrapper">
+    <%= render partial: tab.partial, locals: { f:, organization: }.merge(tab.extra_locals) %>
+  </div>
+  <div class="form__wrapper-block flex-col-reverse md:flex-row justify-between">
+    <%= f.submit t("decidim.system.actions.save"), class: "button button__sm md:button__lg button__primary" %>
+  </div>
+<% end %>

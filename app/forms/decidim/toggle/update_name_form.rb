@@ -17,18 +17,19 @@ module Decidim
       validate :validate_name_presence
 
       def self.from_model(organization)
-        secondary_hosts = if organization.secondary_hosts.is_a?(Array)
-          (organization.secondary_hosts || []).join("\n")
-        elsif organization.secondary_hosts.is_a?(String)
-          organization.secondary_hosts
-        else
-          ""
-        end
-        
+        secondary_hosts = case organization.secondary_hosts
+                          when Array
+                            (organization.secondary_hosts || []).join("\n")
+                          when String
+                            organization.secondary_hosts
+                          else
+                            ""
+                          end
+
         from_params(
           name: organization.name,
           host: organization.host,
-          secondary_hosts: secondary_hosts
+          secondary_hosts:
         )
       end
 

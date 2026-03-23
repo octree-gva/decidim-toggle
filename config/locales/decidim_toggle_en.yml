@@ -1,0 +1,58 @@
+en:
+  decidim:
+    system:
+      organizations:
+        edit:
+          invitation_pending_title: "Invitation pending"
+          invitation_pending_body: "The first administrator of the organization still did not accept the invitation"
+
+  decidim_toggle:
+    system:
+      organizations:
+        settings_tabs:
+          name: "Name"
+          omniauth: "OmniAuth"
+          emails: "Emails"
+          language: "Language"
+          security: "Security"
+          authorizations: "Authorizations"
+          file_upload: "File upload"
+          language_placeholder: "Default and available locales (configured in the form above)."
+        form_tab:
+          save: "Save"
+          success: "Settings updated successfully."
+        authorizations_tab:
+          legend: "Verification workflows"
+          hint: "Choose which verification methods participants can use in this organization."
+        language_tab:
+          legend: "Available and default locale"
+          locale: "Locale"
+          enabled: "Enabled"
+          default: "Default"
+          save: "Save locales"
+          success: "Locales updated successfully."
+          error: "Could not update locales."
+          machine_translations_legend: "Machine translations"
+          machine_translation_display_priority_hint: "Text version participant will see first"
+        tabs:
+          language_tab:
+            machine_translations_legend: "Machine translations"
+            machine_translation_display_priority_hint: "Text version participant will see first"
+        security_tab:
+          access_legend: "Access to the organization"
+          force_auth_label: "Force users to authenticate before accessing the organization"
+          sign_in_mode: "Sign in mode"
+          csp_legend: "Content security policy"
+
+  activemodel:
+    attributes:
+      organization:
+        helptext:
+          "default-src": "Fallback directive used when no other *-src directive matches. Mostly used to set a secure baseline for all resource types. Examples: 'self' https: ; 'none' ; 'self' https: data:"
+          "img-src": "Sources allowed to load images (e.g. <img>, favicons, CSS background images). Use for image CDNs or when you need data/blob URIs. Examples: 'self' https: data: blob: ; https://*.fbcdn.net https://*.instagram.com"
+          "media-src": "Sources allowed to load audio/video (e.g. <video>, <audio>). Use for media hosting/CDNs and blob URLs from uploads. Examples: 'self' https: blob: ; https://media.example.com"
+          "script-src": "Sources allowed to execute scripts (e.g. <script src>, imports, inline scripts when enabled). Use for third-party scripts such as Matomo. Examples: 'self' https://*.matomo.cloud ; 'self' 'nonce-<nonce>'"
+          "style-src": "Sources allowed to load CSS (e.g. <link rel='stylesheet'> and style attributes). Use for CSS from CDNs and, if needed, inline styles. Examples: 'self' https: 'unsafe-inline' ; https://fonts.googleapis.com https://fonts.gstatic.com"
+          "frame-src": "Sources allowed to embed iframes/frames (including embedded players). Use for embeds such as YouTube and Google Scholar. Examples: 'self' https://www.youtube.com https://scholar.google.com ; https://*.trusted-partner.com"
+          "font-src": "Sources allowed to load fonts (e.g. @font-face). Use for external font providers such as Google Fonts. Examples: 'self' https: data: ; https://fonts.gstatic.com"
+          "connect-src": "Sources allowed to make network connections from the page (fetch/XHR, EventSource, WebSocket). Use for endpoints such as Matomo. Examples: 'self' https: wss: ; https://*.matomo.cloud wss://realtime.example.com ; blob:"

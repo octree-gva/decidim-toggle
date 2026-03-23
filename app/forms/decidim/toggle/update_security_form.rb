@@ -60,7 +60,6 @@ module Decidim
           "connect-src" => send(:"connect-src")
         }.compact_blank
       end
-
     end
   end
 end

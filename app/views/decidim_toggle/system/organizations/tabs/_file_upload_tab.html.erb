@@ -9,11 +9,7 @@
               local: true do |tf| %>
   <%= render "decidim_toggle/system/organizations/settings_tab_active_tab_field", tab: %>
   <div class="form__wrapper">
-    <% if tab.partial.present? %>
-      <%= render partial: tab.partial, locals: { f: tf, organization: }.merge(tab.extra_locals) %>
-    <% else %>
-      <%= tf.all_fields %>
-    <% end %>
+    <%= render "decidim/system/organizations/file_upload_settings", f: tf %>
   </div>
   <%= render "decidim_toggle/system/organizations/settings_tab_submit", form: tf %>
 <% end %>

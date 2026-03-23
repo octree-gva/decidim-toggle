@@ -1,6 +1,8 @@
 <%# Tabs use same logic as Decidim: data-component="accordion" (0.29) + tab-x-container. See decidim-core tab_panels cell, design accordions. %>
 <%= append_stylesheet_pack_tag "decidim_toggle", media: "all" %>
+<%= append_javascript_pack_tag "decidim_toggle" %>
 <% organization = local_assigns[:organization] %>
+<% organization_form = local_assigns[:form] %>
 <% tabs = Decidim::Toggle::SettingsTabs.new(:organization_settings) %>
 <% tabs.build_for(self) %>
 <div data-component="accordion" data-multiselectable="false" data-collapsible="false" id="decidim-toggle-settings-tabs">
@@ -18,14 +20,13 @@
     <div id="panel-toggle-<%= tab.identifier %>" class="border-2 rounded border-background p-4 form__wrapper mt-8" aria-hidden="<%= tab.open? ? "false" : "true" %>">
       <% if tab.form_tab? %>
         <% if tab.form_layout_partial.present? %>
-          <%= render tab.form_layout_partial, tab:, f: f, organization: %>
+          <%= render tab.form_layout_partial, tab:, organization: %>
         <% else %>
-          <%= render "decidim_toggle/system/organizations/form_tab", tab:, f: f, organization: %>
+          <%= render "decidim_toggle/system/organizations/form_tab", tab:, organization: %>
         <% end %>
       <% else %>
-        <%= render partial: tab.partial, locals: { f: f }.merge(local_assigns) %>
+        <%= render "decidim_toggle/system/organizations/custom_organization_tab", tab:, organization:, form: organization_form %>
       <% end %>
-      <%= f.submit t("save", scope: "decidim_toggle.system.organizations.form_tab"), class: "button button__sm button__primary" %>
     </div>
   <% end %>
 </div>

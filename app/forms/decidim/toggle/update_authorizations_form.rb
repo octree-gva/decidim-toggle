@@ -8,7 +8,7 @@ module Decidim
     class UpdateAuthorizationsForm < Decidim::Form
       mimic :organization
 
-      attribute :available_authorizations, Array[String]
+      attribute :available_authorizations, [String]
 
       validate :available_authorizations_subset_of_workflows
 
@@ -31,18 +31,20 @@ module Decidim
       end
 
       def clean_available_authorizations
-        return [] if available_authorizations.blank?
-
-        available_authorizations.map(&:to_s).select(&:present?)
+        @clean_available_authorizations ||= if available_authorizations.blank?
+                                              []
+                                            else
+                                              available_authorizations.map(&:to_s).select(&:present?)
+                                            end
       end
 
       private
 
       def available_authorizations_subset_of_workflows
-        return if available_authorizations.blank?
+        return if clean_available_authorizations.blank?
 
-        allowed = Decidim.authorization_workflows.map(&:name).to_set
-        invalid = Array(available_authorizations).map(&:to_s).reject { |a| allowed.include?(a) }
+        allowed = Decidim.authorization_workflows.to_set(&:name)
+        invalid = Array(clean_available_authorizations).map(&:to_s).reject { |a| allowed.include?(a) }
         return if invalid.empty?
 
         errors.add(:available_authorizations, :invalid)

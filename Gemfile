@@ -31,5 +31,3 @@ group :development do
 end
 
 gem "faker", "~> 3.6"
-
-gem "deface", "~> 1.9"

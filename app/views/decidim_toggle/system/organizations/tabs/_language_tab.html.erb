@@ -1,4 +1,4 @@
-<% organization = local_assigns[:organization] || (f&.object&.respond_to?(:id) && Decidim::Organization.find_by(id: f.object.id)) || f&.object %>
+<% organization = local_assigns[:organization] %>
 <% tab_form = tab.form_class.from_model(organization) %>
 <%= form_with url: decidim_toggle_update_settings_tab_organization_path(organization, tab_id: tab.identifier),
               model: tab_form,
@@ -7,6 +7,7 @@
               method: :patch,
               html: { id: "settings_tab_form_#{tab.identifier}" },
               local: true do |tf| %>
+  <%= render "decidim_toggle/system/organizations/settings_tab_active_tab_field", tab: %>
   <div class="form__wrapper">
     <fieldset>
       <legend class="form-legend"><%= t("decidim_toggle.system.organizations.language_tab.legend") %></legend>
@@ -30,13 +31,14 @@
       </table>
     </fieldset>
     <fieldset>
-      <legend class="form-legend">Machine translations</legend>
-        <%= tf.fields_for_names(:enable_machine_translations) %>
+      <legend class="form-legend"><%= t(".machine_translations_legend") %></legend>
+      <%= tf.fields_for_names(:enable_machine_translations) %>
 
-       <p>
-        <label class="form-legend" for="organization[machine_translation_display_priority]">Text version participant will see first</label>
+      <p>
+        <label class="form-legend" for="organization[machine_translation_display_priority]"><%= t(".machine_translation_display_priority_hint") %></label>
         <%= tf.fields_for_names(:machine_translation_display_priority) %>
-       </p>
+      </p>
     </fieldset>
   </div>
+  <%= render "decidim_toggle/system/organizations/settings_tab_submit", form: tf %>
 <% end %>

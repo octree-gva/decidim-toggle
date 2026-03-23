@@ -21,41 +21,47 @@ module Decidim
                        command: Decidim::Toggle::UpdateNameCommand,
                        position: 1, open: true
 
-          tabs.add_custom_tab :registration,
-                              t("registration", scope:),
-                              "decidim/system/organizations/omniauth_settings",
-                              position: 2
+          tabs.add_tab :omniauth,
+                       t("omniauth", scope:),
+                       form: Decidim::Toggle::UpdateOmniauthForm,
+                       command: Decidim::Toggle::UpdateOmniauthCommand,
+                       partial: "decidim/system/organizations/omniauth_settings",
+                       position: 2
 
-          tabs.add_custom_tab :emails,
-                              t("emails", scope:),
-                              "decidim/system/organizations/smtp_settings",
-                              position: 3
+          tabs.add_tab :emails,
+                       t("emails", scope:),
+                       form: Decidim::Toggle::UpdateEmailsForm,
+                       command: Decidim::Toggle::UpdateEmailsCommand,
+                       partial: "decidim/system/organizations/smtp_settings",
+                       position: 3
 
           tabs.add_tab :language,
                        t("language", scope:),
                        form: Decidim::Toggle::UpdateLocaleForm,
                        command: Decidim::Toggle::UpdateLocaleCommand,
                        position: 4,
-                       form_layout_partial: "decidim_toggle/system/organizations/language_tab"
+                       form_layout_partial: "decidim_toggle/system/organizations/tabs/language_tab"
 
           tabs.add_tab :authorizations,
                        t("authorizations", scope:),
                        form: Decidim::Toggle::UpdateAuthorizationsForm,
                        command: Decidim::Toggle::UpdateAuthorizationsCommand,
                        position: 5,
-                       form_layout_partial: "decidim_toggle/system/organizations/authorizations_tab"
+                       form_layout_partial: "decidim_toggle/system/organizations/tabs/authorizations_tab"
 
           tabs.add_tab :security,
                        t("security", scope:),
                        form: Decidim::Toggle::UpdateSecurityForm,
                        command: Decidim::Toggle::UpdateSecurityCommand,
-                       form_layout_partial: "decidim_toggle/system/organizations/security_tab",
+                       form_layout_partial: "decidim_toggle/system/organizations/tabs/security_tab",
                        position: 6
 
-          tabs.add_custom_tab :other,
-                              t("file_upload", scope:),
-                              "decidim/system/organizations/file_upload_settings",
-                              position: 7
+          tabs.add_tab :other,
+                       t("file_upload", scope:),
+                       form: Decidim::Toggle::UpdateFileUploadSettingsForm,
+                       command: Decidim::Toggle::UpdateFileUploadSettingsCommand,
+                       position: 7,
+                       form_layout_partial: "decidim_toggle/system/organizations/tabs/file_upload_tab"
         end
       end
     end

@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "rake"
+
 module Decidim
   module Toggle
     class UpdateLocaleCommand < Decidim::Command
@@ -36,6 +38,7 @@ module Decidim
       end
 
       def rebuild_search_index
+        Rails.application.load_tasks
         Rake::Task["decidim:locales:rebuild_search"].reenable
         Rake::Task["decidim:locales:rebuild_search"].invoke
       end

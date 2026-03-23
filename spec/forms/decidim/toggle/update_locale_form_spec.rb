@@ -10,24 +10,24 @@ module Decidim
       describe ".from_model" do
         it "normalizes available_locales and default_locale to strings" do
           org = Struct.new(:available_locales, :default_locale, :enable_machine_translations, :machine_translation_display_priority).new(
-            %i[en ca es], :en, false, "original"
+            [:en, :ca, :es], :en, false, "original"
           )
 
           form = described_class.from_model(org)
 
-          expect(form.available_locales).to eq(%w[en ca es])
+          expect(form.available_locales).to eq(%w(en ca es))
           expect(form.default_locale).to eq("en")
         end
 
         it "loads locales from the Organization record when the source only has id (e.g. system UpdateOrganizationForm)" do
-          org = create(:organization, available_locales: %w[en ca], default_locale: "ca")
+          org = create(:organization, available_locales: %w(en ca), default_locale: "ca")
           form_like = Struct.new(:id, :enable_machine_translations, :machine_translation_display_priority).new(
             org.id, false, "original"
           )
 
           form = described_class.from_model(form_like)
 
-          expect(form.available_locales).to eq(%w[en ca])
+          expect(form.available_locales).to eq(%w(en ca))
           expect(form.default_locale).to eq("ca")
         end
       end

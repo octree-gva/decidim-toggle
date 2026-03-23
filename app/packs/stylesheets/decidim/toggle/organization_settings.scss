@@ -1,9 +1,43 @@
 // Organization settings form + accordion tabs (decidim-toggle).
 // Loaded only when the tabbed settings partial is rendered (decidim system).
-
+#decidim-toggle-callout {
+  border-bottom-width: 2px;
+  border-right-width: 2px;
+  .invitation_pending_title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+  }
+  .invitation_pending_body {
+    font-size: 1rem;
+    font-weight: 400;
+    margin-bottom: 0;
+  }
+  .callout-actions {
+    margin-top: 1rem;
+  }
+}
 #decidim-toggle-settings-tabs {
   margin-top: 1rem;
-
+  .button {
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+    padding-top: 0.375rem !important;
+    padding-bottom: 0.375rem !important;
+    margin-left: 0 !important;
+    font-size: 14px !important;
+    line-height: 18px !important;
+  }
+  .field-helptext {
+    font-size: 12px;
+    font-weight: 400;
+    color: #666;
+    margin: 0;
+    transform: translateY(-7px);
+  }
+  .form__wrapper-block {
+    border: 0 solid transparent;
+  }
   .tab-x-container {
     display: flex;
     flex-wrap: wrap;
@@ -53,7 +87,7 @@
 
   > [id^="panel-toggle-"] {
     clear: both;
-    border: 1px solid #EEE;
+    border: 1px solid #eee;
     padding: 16px 8px;
   }
 
@@ -85,7 +119,9 @@
     margin-bottom: 0.5rem;
   }
 
-  .form-legend, legend, legend > label{
+  .form-legend,
+  legend,
+  legend > label {
     font-size: 16px;
     font-weight: 600;
     padding: 0;
@@ -102,7 +138,8 @@
     margin: 6px 0;
     padding: 2px 8px;
   }
-  input[type="checkbox"], input[type="radio"] {
+  input[type="checkbox"],
+  input[type="radio"] {
     margin: 6px 8px 6px 0;
     padding: 2px 8px;
   }

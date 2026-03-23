@@ -26,22 +26,19 @@ module Decidim
       # @param label [String] Tab button label
       # @param form [Class] Decidim::Form subclass (must respond to .from_model(organization))
       # @param command [Class] Decidim::Command that receives (organization, form)
-      # @param options [Hash] :position, :if, :open, :form_layout_partial (optional partial path instead of default form_tab)
-      def add_tab(identifier, label, form:, command:, **options)
+      # @param options [Hash] :position, :if, :open,
+      #                        :partial (optional partial path for the form body),
+      #                        :form_layout_partial (optional partial path instead of default form_tab wrapper)
+      def add_tab(identifier, label, form:, **options)
+        command = options.fetch(:command)
         options = { position: (1 + @items.length) }.merge(options)
+
+        partial = options.delete(:partial)
+        options[:partial] = partial if partial.present?
+
         module_name = options[:module_name]
         registry.register_form_tab(identifier, form, command, module_name:)
         @items << SettingsTabItem.new(identifier, label, options.merge(form_class: form, command_class: command))
-      end
-
-      # Tab with custom partial: caller provides partial path and is responsible for controller/command.
-      # @param identifier [Symbol] Tab id
-      # @param label [String] Tab button label
-      # @param partial [String] Partial path (e.g. "decidim/system/organizations/omniauth_settings")
-      # @param options [Hash] :position, :if, :open, :extra_locals
-      def add_custom_tab(identifier, label, partial, **options)
-        options = { position: (1 + @items.length) }.merge(options)
-        @items << SettingsTabItem.new(identifier, label, options.merge(partial:))
       end
 
       def remove_tab(identifier)

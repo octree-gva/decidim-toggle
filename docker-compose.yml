@@ -17,6 +17,8 @@ services:
       - DEV_MODULE=decidim-toggle
       - RAILS_ENV=development
       - DISABLED_DOCKER_COMPOSE=true
+      - DECIDIM_FORCE_SSL=false
+      - RAILS_FORCE_SSL=false
     depends_on:
       - toggle_db
     ports:

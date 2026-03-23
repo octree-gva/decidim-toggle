@@ -1,5 +1,7 @@
 ##
 # Reusable Decidim module CI (aligned with decidim-module-spam_signal).
+# Local pre-push: run ./bin/check from the gem root (RuboCop + erblint + RSpec; see bin/check).
+# Full pipeline adds Prettier, Crowdin, coverage — see README.md and CONTRIBUTING.md.
 # Required CI/CD variables for Crowdin / publish:
 # - CROWDIN_PERSONAL_TOKEN, CROWDIN_PROJECT_ID, TRANSLATIONBOT_ID,
 #   TRANSLATIONBOT_ACCESS_TOKEN, GEM_HOST_API_KEY (see spam_signal README).

@@ -28,14 +28,20 @@ module Decidim
         expect(list.items.first.module_name).to eq(:demo_mod)
       end
 
-      it "add_custom_tab registers partial tabs" do
+      it "add_tab supports an optional partial renderer" do
         SettingsTabRegistry.register(:tabs_spec) do |tabs|
-          tabs.add_custom_tab :x, "X", "decidim/foo", position: 2
+          tabs.add_tab :x,
+                       "X",
+                       form: String,
+                       command: Integer,
+                       partial: "decidim/foo",
+                       position: 2
         end
 
         list = described_class.new(:tabs_spec)
         list.build_for(Object.new)
-        expect(list.items.first).to be_custom_tab
+        expect(list.items.first.partial).to eq("decidim/foo")
+        expect(list.items.first.form_tab?).to be(true)
       end
 
       it "remove_tab filters items" do

@@ -33,7 +33,7 @@ module Decidim
           "L",
           form_class: String,
           command_class: Integer,
-          form_layout_partial: "decidim_toggle/system/organizations/language_tab"
+          form_layout_partial: "decidim_toggle/system/organizations/tabs/language_tab"
         )
         expect(item).to be_form_tab
         expect(item).not_to be_custom_tab

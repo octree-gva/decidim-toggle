@@ -13,7 +13,7 @@ Gem::Specification.new do |s|
   s.required_ruby_version = ">= 3.2"
   s.name = "decidim-toggle"
   s.summary = "Feature toggle for Decidim system administration"
-  s.description = "Tabbed System organization settings (registration, emails, language, security, other) " \
+  s.description = "Tabbed System organization settings (OmniAuth, emails, language, security, other) " \
                   "with an API for other modules to add tabs. Overrides decidim-system organization views via prepended paths."
 
   s.files = Dir.chdir(__dir__) do
@@ -21,7 +21,7 @@ Gem::Specification.new do |s|
     if tracked.any?
       tracked
     else
-      Dir["{app,config,lib}/**/*", "Rakefile", "README.md"].reject { |f| f.match(%r{^(spec|decidim_dummy_app)/}) }
+      Dir["{app,config,lib}/**/*", "Rakefile", "README.md", "CONTRIBUTING.md"].reject { |f| f.match(%r{^(spec|decidim_dummy_app)/}) }
     end
   end
 

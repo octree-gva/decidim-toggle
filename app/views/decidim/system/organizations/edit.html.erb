@@ -1,0 +1,20 @@
+<% add_decidim_page_title(t(".title")) %>
+
+<% provide :title do %>
+  <h1 class="h1"><%= t ".title" %></h1>
+<% end %>
+<% if @organization&.users&.first&.invitation_pending? %>
+  <div id="decidim-toggle-callout" class="callout callout--warning invitation_pending form__wrapper-block flex-col-reverse md:flex-row justify-between mt-8">
+    <div class="callout-content">
+      <h4 class="invitation_pending_title"><%= t(".invitation_pending_title") %></h4>
+      <p class="invitation_pending_body"><%= t(".invitation_pending_body") %></p>
+    </div>
+    <div class="callout-actions">
+      <%= link_to t(".resend_invitation"),
+                  resend_invitation_organization_path(@organization),
+                  method: :post, class: "button button__sm button__transparent-secondary", data: { confirm: t(".confirm_resend_invitation") } %>
+    </div>
+  </div>
+<% end %>
+
+<%= render "decidim_toggle/system/organizations/settings_tabs", organization: @organization, form: @form %>

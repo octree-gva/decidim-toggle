@@ -17,7 +17,7 @@ module Decidim
       def fields_for_names(*names)
         names = names.flatten.map(&:to_s)
         fields = names.filter_map do |name|
-          next unless object.class.respond_to?(:attribute_types) && object.class.attribute_types.key?(name)
+          next unless object.class.respond_to?(:attribute_types) && object.class.attribute_types.has_key?(name)
 
           @template.content_tag(:div, input_field(name.to_sym), class: "field")
         end
@@ -28,11 +28,26 @@ module Decidim
 
       def input_field(name)
         name = name.to_sym
-        if translatable_hash_attribute?(name)
-          return translated_input_field(name)
+        input_html = if translatable_hash_attribute?(name)
+          translated_input_field(name)
+        else
+          build_input_field(name)
         end
 
+        helptext = helptext_for_attribute(name)
+        return input_html if helptext.blank?
+
+        # Render the help text under the field label (the upstream `Decidim::FormBuilder`
+        # typically renders the label inside the field HTML returned above).
+        @template.safe_join([
+          input_html,
+          @template.content_tag(:p, helptext, class: "field-helptext")
+        ])
+      end
+
+      def build_input_field(name)
         type = attribute_type(name)
+
         if (collection = collection_for(name))
           if type == :array
             collection_check_boxes(name, collection, :first, :last) do |b|
@@ -80,7 +95,7 @@ module Decidim
         return false unless object.class.include?(Decidim::TranslatableAttributes)
 
         type = object.class.attribute_types[base.to_s]
-        type&.respond_to?(:type) && type.type == :hash
+        type.respond_to?(:type) && type.type == :hash
       end
 
       def translatable_locale_field?(key)
@@ -104,11 +119,33 @@ module Decidim
         case t
         when :"decidim/attributes/rich_text"
           translated(:editor, name)
-        when :string, :"decidim/attributes/clean_string"
-          translated(:text_field, name)
         else
           translated(:text_field, name)
         end
+      end
+
+      def helptext_for_attribute(name)
+        attribute_name = name.to_s
+
+        # When a form `mimic`s another ActiveModel (e.g. organization), `model_name`
+        # is expected to match i18n keys used across Decidim.
+        candidate_model_keys = []
+        if object.class.respond_to?(:model_name) && object.class.model_name.respond_to?(:i18n_key)
+          candidate_model_keys << object.class.model_name.i18n_key
+        end
+        candidate_model_keys << object_name if respond_to?(:object_name)
+
+        candidate_model_keys.compact!
+        candidate_model_keys.uniq!
+
+        candidate_model_keys.each do |model_key|
+          # Preferred location avoids making `activemodel.attributes.<model>.<attr>` a Hash (which can break
+          # attribute name i18n lookups for the same key).
+          helptext = I18n.t("activemodel.attributes.#{model_key}.helptext.#{attribute_name}", default: nil)
+          return helptext if helptext.present?
+        end
+
+        nil
       end
     end
   end
