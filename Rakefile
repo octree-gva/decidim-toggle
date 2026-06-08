@@ -16,10 +16,7 @@ def seed_db(path)
 end
 
 desc "Generates a dummy app for testing"
-task test_app: "decidim:generate_external_test_app" do
-  ENV["RAILS_ENV"] = "test"
-  install_deps("spec/decidim_dummy_app")
-end
+task test_app: "decidim:generate_external_test_app"
 
 desc "Generates a development app."
 task :development_app do

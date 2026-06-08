@@ -5,7 +5,12 @@ require "decidim/system/base_organization_form"
 module Decidim
   module Toggle
     class UpdateOmniauthForm < Decidim::System::BaseOrganizationForm
+      include InformativeCallouts
+
       mimic :organization
+
+      info "For generated organization defaults, check the decidim space page",
+           if_predicate: ->(*) { Decidim::Toggle.gem_present?("decidim-space_page") }
 
       # This tab only updates a small JSONB slice (omniauth settings).
       # The generic system form validates presence of `host` and `users_registration_mode`,
@@ -28,4 +33,3 @@ module Decidim
     end
   end
 end
-

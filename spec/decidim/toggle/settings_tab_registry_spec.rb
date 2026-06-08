@@ -52,6 +52,14 @@ module Decidim
           reg.register_form_tab(:foo, String, Integer)
           expect(reg.form_tab_for_module(:decidim_geo)).to be_nil
         end
+
+        it "raises when the same tab id is re-registered with a different form in test" do
+          reg = described_class.create(:test_registry)
+          reg.register_form_tab(:foo, String, Integer)
+          expect do
+            reg.register_form_tab(:foo, Array, Integer)
+          end.to raise_error(Decidim::Toggle::DuplicateTabRegistrationError, /:foo/)
+        end
       end
     end
   end
