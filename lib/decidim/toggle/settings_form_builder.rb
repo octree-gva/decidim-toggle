@@ -6,6 +6,28 @@ module Decidim
     # Form classes can define class method collection_for_<attribute> to return [[value, label], ...] for collection inputs.
     # Loaded from the engine after +require "decidim/core"+ so +Decidim::FormBuilder+ autoload works.
     class SettingsFormBuilder < Decidim::FormBuilder
+      CALLOUT_CLASS_BY_TYPE = {
+        info: "info",
+        warning: "warning",
+        danger: "alert"
+      }.freeze
+
+      def informative_callouts
+        return "".html_safe unless object.class.include?(InformativeCallouts)
+
+        entries = object.visible_informative_callouts
+        return "".html_safe if entries.blank?
+
+        callouts = entries.map do |entry|
+          @template.cell(
+            "decidim/announcement",
+            entry.message,
+            callout_class: CALLOUT_CLASS_BY_TYPE.fetch(entry.type)
+          )
+        end
+        safe_join(callouts)
+      end
+
       def all_fields
         fields = attribute_names.map do |name|
           @template.content_tag(:div, input_field(name), class: "field")
@@ -28,21 +50,24 @@ module Decidim
 
       def input_field(name)
         name = name.to_sym
-        input_html = if translatable_hash_attribute?(name)
-          translated_input_field(name)
-        else
-          build_input_field(name)
-        end
+        input_html =
+          if translatable_hash_attribute?(name)
+            translated_input_field(name)
+          else
+            build_input_field(name)
+          end
 
         helptext = helptext_for_attribute(name)
         return input_html if helptext.blank?
 
         # Render the help text under the field label (the upstream `Decidim::FormBuilder`
         # typically renders the label inside the field HTML returned above).
-        @template.safe_join([
-          input_html,
-          @template.content_tag(:p, helptext, class: "field-helptext")
-        ])
+        @template.safe_join(
+          [
+            input_html,
+            @template.content_tag(:p, helptext, class: "field-helptext")
+          ]
+        )
       end
 
       def build_input_field(name)
@@ -130,9 +155,7 @@ module Decidim
         # When a form `mimic`s another ActiveModel (e.g. organization), `model_name`
         # is expected to match i18n keys used across Decidim.
         candidate_model_keys = []
-        if object.class.respond_to?(:model_name) && object.class.model_name.respond_to?(:i18n_key)
-          candidate_model_keys << object.class.model_name.i18n_key
-        end
+        candidate_model_keys << object.class.model_name.i18n_key if object.class.respond_to?(:model_name) && object.class.model_name.respond_to?(:i18n_key)
         candidate_model_keys << object_name if respond_to?(:object_name)
 
         candidate_model_keys.compact!

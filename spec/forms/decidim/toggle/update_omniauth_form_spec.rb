@@ -43,8 +43,8 @@ module Decidim
 
         params = {
           organization: {
-            host: organization.host,
-            users_registration_mode: organization.users_registration_mode,
+            :host => organization.host,
+            :users_registration_mode => organization.users_registration_mode,
             "omniauth_settings_#{provider}_enabled" => true,
             "omniauth_settings_#{provider}_#{setting_key}" => "foo-#{setting_key}"
           }
@@ -59,6 +59,18 @@ module Decidim
         expect(form.encrypted_omniauth_settings).to include("omniauth_settings_#{provider}_#{setting_key}")
       end
 
+      it "registers space page info callout only when decidim-space_page is in the bundle" do
+        form = described_class.from_params({})
+        entries = form.visible_informative_callouts
+
+        if Decidim::Toggle.gem_present?("decidim-space_page")
+          expect(entries.map(&:type)).to eq([:info])
+          expect(entries.first.message).to include("decidim space page")
+        else
+          expect(entries).to be_empty
+        end
+      end
+
       it "is valid and executes the uniqueness validation hook (no-op)" do
         form = described_class.from_model(organization)
 
@@ -68,4 +80,3 @@ module Decidim
     end
   end
 end
-

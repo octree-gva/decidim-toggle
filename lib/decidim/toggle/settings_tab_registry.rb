@@ -2,6 +2,8 @@
 
 module Decidim
   module Toggle
+    class DuplicateTabRegistrationError < StandardError; end
+
     class SettingsTabRegistry
       class << self
         def register(name, &block)
@@ -62,6 +64,12 @@ module Decidim
           @module_configs.delete(previous)
         end
 
+        if duplicate_tab_registration?(tid, form_class, command_class)
+          raise DuplicateTabRegistrationError,
+                "Tab :#{tid} is already registered with form #{@form_tabs[tid][:form]} " \
+                "and command #{@form_tabs[tid][:command]}; attempted #{form_class} / #{command_class}"
+        end
+
         @form_tabs[tid] = { form: form_class, command: command_class }
         if module_name.blank?
           @tab_to_module_name.delete(tid)
@@ -85,6 +93,16 @@ module Decidim
       def form_tab_for_module(module_name)
         ensure_configurations_applied!
         module_configs[module_name.to_s]
+      end
+
+      private
+
+      def duplicate_tab_registration?(tid, form_class, command_class)
+        return false unless Rails.env.development? || Rails.env.test?
+        return false unless @form_tabs[tid]
+
+        existing = @form_tabs[tid]
+        existing[:form] != form_class || existing[:command] != command_class
       end
     end
   end

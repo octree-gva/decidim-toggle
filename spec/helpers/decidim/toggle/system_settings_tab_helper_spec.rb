@@ -1,0 +1,45 @@
+# frozen_string_literal: true
+
+require "spec_helper"
+
+module Decidim
+  module Toggle
+    describe SystemSettingsTabHelper do
+      let(:helper_host) do
+        Class.new do
+          include Decidim::Toggle::SystemSettingsTabHelper
+          include Decidim::Toggle::SystemLocaleHelper
+          include ActionView::Helpers::FormHelper
+          include ActionView::Helpers::FormTagHelper
+          include ActionView::Helpers::OutputSafetyHelper
+          include ActionView::Context
+        end.new
+      end
+
+      let(:tab) do
+        SettingsTabItem.new(
+          :security,
+          "Security",
+          form_class: UpdateSecurityForm,
+          command_class: UpdateSecurityCommand
+        )
+      end
+      let(:form) { UpdateSecurityForm.from_params(organization: { host: "example.org", users_registration_mode: "enabled" }) }
+      let(:organization) { instance_double(Decidim::Organization, id: 1) }
+
+      before do
+        allow(UpdateSecurityForm).to receive(:from_model).with(organization).and_return(form)
+        allow(helper_host).to receive(:render).and_return("".html_safe)
+        allow(helper_host).to receive(:decidim_toggle_update_settings_tab_organization_path)
+          .with(organization, tab_id: :security)
+          .and_return("/decidim_toggle/system/organizations/1/settings_tab/security")
+      end
+
+      it "renders form shell markup" do
+        html = helper_host.decidim_toggle_settings_tab_form(organization, tab) { |_tf| "body" }
+        expect(html).to include("settings_tab_form_security")
+        expect(html).to include('action="/decidim_toggle/system/organizations/1/settings_tab/security"')
+      end
+    end
+  end
+end
