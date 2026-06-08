@@ -27,13 +27,14 @@ namespace :decidim_toggle do
     end
 
     def toggle_npm_dependencies
-      @toggle_npm_dependencies ||= begin
-        return [] if toggle_path.nil? || !File.exist?(toggle_path.join("package.json"))
+      @toggle_npm_dependencies ||=
+        if toggle_path.nil? || !File.exist?(toggle_path.join("package.json"))
+          []
+        else
+          package_json = JSON.parse(File.read(toggle_path.join("package.json")))
 
-        package_json = JSON.parse(File.read(toggle_path.join("package.json")))
-
-        (package_json["dependencies"] || {}).map { |package, version| "#{package}@#{version}" }
-      end
+          (package_json["dependencies"] || {}).map { |package, version| "#{package}@#{version}" }
+        end
     end
 
     def toggle_path
@@ -57,4 +58,3 @@ namespace :decidim_toggle do
     end
   end
 end
-

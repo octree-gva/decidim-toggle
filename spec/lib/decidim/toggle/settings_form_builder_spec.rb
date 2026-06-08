@@ -27,6 +27,24 @@ module Decidim
         expect(html).to be_present
       end
 
+      it "renders informative callouts with decidim announcement cell markup" do
+        form_class = Class.new(UpdateSecurityForm) do
+          include InformativeCallouts
+
+          info "Spec info callout"
+        end
+        form = form_class.from_params(organization: {})
+        template = ActionView::Base.with_empty_template_cache.new(ActionView::LookupContext.new([]), {}, nil)
+        allow(template).to receive(:cell) do |_name, message, options|
+          %(<div class="flash flex-col #{options[:callout_class]}">#{message}</div>).html_safe
+        end
+        builder = described_class.new(:organization, form, template, {})
+
+        html = builder.informative_callouts
+        expect(html).to include("Spec info callout")
+        expect(html).to include('class="flash flex-col info"')
+      end
+
       it "renders i18n helptext under the field when present" do
         organization = create(:organization)
         form = UpdateSecurityForm.from_model(organization)
@@ -38,21 +56,21 @@ module Decidim
 
         I18n.with_locale(:en) do
           I18n.backend.store_translations(:en, {
-            activemodel: {
-              attributes: {
-                "organization" => {
-                  helptext: {
-                    "users_registration_mode" => helptext
-                  }
-                },
-                model_key => {
-                  helptext: {
-                    "users_registration_mode" => helptext
-                  }
-                }
-              }
-            }
-          })
+                                            activemodel: {
+                                              attributes: {
+                                                "organization" => {
+                                                  helptext: {
+                                                    "users_registration_mode" => helptext
+                                                  }
+                                                },
+                                                model_key => {
+                                                  helptext: {
+                                                    "users_registration_mode" => helptext
+                                                  }
+                                                }
+                                              }
+                                            }
+                                          })
 
           html = builder.fields_for_names(:users_registration_mode)
           expect(html).to include(helptext)

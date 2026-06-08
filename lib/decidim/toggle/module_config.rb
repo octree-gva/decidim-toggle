@@ -11,12 +11,6 @@ module Decidim
         name.to_s
       end
 
-      # Loads JSONB for +organization+ and +module_name+.
-      # When a form is registered for this module (via +add_tab ..., module_name:+), returns
-      # a {ModuleConfigurationPresenter}; otherwise an indifferent hash of the raw config.
-      #
-      # @param registry_name [Symbol] settings registry (default +:organization_settings+)
-      # @return [ModuleConfigurationPresenter, ActiveSupport::HashWithIndifferentAccess]
       def config_for(organization, module_name, registry_name: :organization_settings)
         key = normalize_module_name(module_name)
         raw = raw_config_hash(organization, key)
@@ -30,12 +24,6 @@ module Decidim
         end
       end
 
-      # Persists config for +organization+ and +module_name+.
-      # Uses **shallow merge** at the top level of the JSON object: new keys overwrite, nested
-      # values are replaced as a whole for a given key.
-      #
-      # @param attributes [Hash] coercible keys (string or symbol)
-      # @param merge [Boolean] when +true+ (default), merges into existing config; when +false+, replaces
       def save_config!(organization, module_name, attributes, merge: true)
         key = normalize_module_name(module_name)
         record = OrganizationModuleConfig.find_or_initialize_by(

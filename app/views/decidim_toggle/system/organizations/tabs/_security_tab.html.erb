@@ -1,31 +1,21 @@
 <% organization = local_assigns[:organization] %>
-<% tab_form = tab.form_class.from_model(organization) %>
-<%= form_with url: decidim_toggle_update_settings_tab_organization_path(organization, tab_id: tab.identifier),
-              model: tab_form,
-              scope: :organization,
-              builder: Decidim::Toggle::SettingsFormBuilder,
-              method: :patch,
-              html: { id: "settings_tab_form_#{tab.identifier}" },
-              local: true do |tf| %>
-  <%= render "decidim_toggle/system/organizations/settings_tab_active_tab_field", tab: %>
-  <div class="form__wrapper">
-    <fieldset>
-      <legend class="form-legend"><%= t("decidim_toggle.system.organizations.security_tab.access_legend") %></legend>
-      <p>
-        <%= tf.check_box :force_users_to_authenticate_before_access_organization %>
-        <%= tf.label :force_users_to_authenticate_before_access_organization, t("decidim_toggle.system.organizations.security_tab.force_auth_label") %>
-      </p>
+<% tab = local_assigns[:tab] %>
+<%= decidim_toggle_settings_tab_form(organization, tab) do |tf| %>
+  <fieldset>
+    <legend class="form-legend"><%= t("decidim_toggle.system.organizations.security_tab.access_legend") %></legend>
+    <p>
+      <%= tf.check_box :force_users_to_authenticate_before_access_organization %>
+      <%= tf.label :force_users_to_authenticate_before_access_organization, t("decidim_toggle.system.organizations.security_tab.force_auth_label") %>
+    </p>
 
-      <p>
-        <label class="form-label"><%= t("decidim_toggle.system.organizations.security_tab.sign_in_mode") %></label>
-        <%= tf.fields_for_names(:users_registration_mode) %>
-      </p>
-    </fieldset>
+    <p>
+      <label class="form-label"><%= t("decidim_toggle.system.organizations.security_tab.sign_in_mode") %></label>
+      <%= tf.fields_for_names(:users_registration_mode) %>
+    </p>
+  </fieldset>
 
-    <fieldset>
-      <legend class="form-legend"><%= t("decidim_toggle.system.organizations.security_tab.csp_legend") %></legend>
-      <%= tf.fields_for_names("default-src", "img-src", "media-src", "script-src", "style-src", "frame-src", "font-src", "connect-src") %>
-    </fieldset>
-  </div>
-  <%= render "decidim_toggle/system/organizations/settings_tab_submit", form: tf %>
+  <fieldset>
+    <legend class="form-legend"><%= t("decidim_toggle.system.organizations.security_tab.csp_legend") %></legend>
+    <%= tf.fields_for_names("default-src", "img-src", "media-src", "script-src", "style-src", "frame-src", "font-src", "connect-src") %>
+  </fieldset>
 <% end %>

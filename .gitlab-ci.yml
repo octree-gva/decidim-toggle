@@ -65,6 +65,15 @@ node::prettier:
     - yarn install --frozen-lockfile
     - yarn format:check
 
+node::docs:
+  extends: .development_rules
+  image: node:20
+  stage: lint
+  script:
+    - cd website
+    - yarn install
+    - yarn build
+
 crowdin::lint:
   extends: .development_rules
   image: node:20

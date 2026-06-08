@@ -23,14 +23,6 @@ module Decidim
         Decidim::Toggle::OrganizationSettingsTabs.register!
       end
 
-      initializer "decidim_toggle.append_migrations" do |app|
-        next if app.root == root
-
-        config.paths["db/migrate"].expanded.each do |expanded_path|
-          app.config.paths["db/migrate"] << expanded_path
-        end
-      end
-
       initializer "decidim_toggle.webpacker.assets_path" do
         Decidim.register_assets_path File.expand_path("app/packs", root)
       end
@@ -43,7 +35,10 @@ module Decidim
       end
 
       config.to_prepare do
-        ActiveSupport.on_load(:action_view) { include Decidim::Toggle::SystemLocaleHelper }
+        ActiveSupport.on_load(:action_view) do
+          include Decidim::Toggle::SystemLocaleHelper
+          include Decidim::Toggle::SystemSettingsTabHelper
+        end
       end
     end
   end
