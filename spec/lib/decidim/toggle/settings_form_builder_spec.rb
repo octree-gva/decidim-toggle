@@ -76,6 +76,25 @@ module Decidim
           expect(html).to include(helptext)
         end
       end
+
+      it "renders boolean fields, text areas, and collection inputs" do
+        organization = create(:organization, secondary_hosts: %w(extra.example.org))
+        template = ActionView::Base.with_empty_template_cache.new(ActionView::LookupContext.new([]), {}, nil)
+
+        security_form = UpdateSecurityForm.from_model(organization)
+        security_builder = described_class.new(:organization, security_form, template, {})
+        security_html = security_builder.all_fields
+        expect(security_html).to include('type="checkbox"')
+        expect(security_builder.fields_for_names(:users_registration_mode)).to include('type="radio"')
+
+        name_form = UpdateNameForm.from_model(organization)
+        name_builder = described_class.new(:organization, name_form, template, {})
+        expect(name_builder.all_fields).to include("extra.example.org")
+
+        authorizations_form = UpdateAuthorizationsForm.from_model(organization)
+        authorizations_builder = described_class.new(:organization, authorizations_form, template, {})
+        expect(authorizations_builder.all_fields).to include('type="checkbox"')
+      end
     end
   end
 end

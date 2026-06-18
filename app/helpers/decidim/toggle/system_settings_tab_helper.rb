@@ -3,6 +3,22 @@
 module Decidim
   module Toggle
     module SystemSettingsTabHelper
+      ##
+      # Check if Decidim can use encryption
+      def encryption_configured?
+        return false if Rails.application.secret_key_base.blank?
+
+        probe = "decidim-toggle-secret-probe"
+        encrypted = Decidim::AttributeEncryptor.encrypt(probe)
+        return false if encrypted.blank?
+
+        Decidim::AttributeEncryptor.decrypt(encrypted) == probe
+      rescue ArgumentError, OpenSSL::Cipher::CipherError,
+             ActiveSupport::MessageEncryptor::InvalidMessage,
+             ActiveSupport::MessageVerifier::InvalidSignature
+        false
+      end
+
       def decidim_toggle_settings_tab_form(organization, tab, &block)
         tab_form = tab.form_class.from_model(organization)
         form_with(

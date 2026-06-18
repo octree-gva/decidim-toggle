@@ -52,8 +52,18 @@ Route helper: `decidim_toggle_update_settings_tab_organization_path`.
 ```ruby
 Decidim::Toggle.config_for(organization, :my_module)
 Decidim::Toggle.save_config!(organization, :my_module, attrs, merge: true)
+Decidim::Toggle.javascript_config_for(organization) # => { "my_module.enabled" => true, ... }
 Decidim::Toggle.gem_present?("decidim-other")  # optional gem in bundle
 ```
+
+## Expose attributes to JS
+
+| Piece | Class / concern |
+|-------|-----------------|
+| `Decidim::Toggle::ExposeAttributesToJs` | `expose_to_javascript` on form classes |
+| `Decidim::Toggle.javascript_config_for` | Build flat hash for `window.DecidimToggle` |
+
+See [Attributes — Expose attributes to JS](../integrate/attributes.md#expose-attributes-to-js).
 
 ## UI helpers
 

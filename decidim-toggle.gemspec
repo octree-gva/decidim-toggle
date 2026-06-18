@@ -29,6 +29,7 @@ Gem::Specification.new do |s|
 
   s.add_dependency "decidim-core", Decidim::Toggle.decidim_version
   s.add_dependency "decidim-system", Decidim::Toggle.decidim_version
+  s.add_dependency "deface", "~> 1.9.0"
 
   s.metadata["rubygems_mfa_required"] = "true"
 end

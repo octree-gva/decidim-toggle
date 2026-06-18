@@ -13,9 +13,8 @@ module Decidim
         expect(view_path).to exist
         content = File.read(view_path)
         expect(content).to include("SettingsTabs")
-        expect(content).to include("organization_form")
         expect(content).to include("organization")
-        expect(content).to include("custom_organization_tab")
+        expect(content).to include("form_tab")
       end
 
       it "provides system organization edit view without an outer decidim_form_for" do

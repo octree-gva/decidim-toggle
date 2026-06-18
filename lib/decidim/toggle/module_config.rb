@@ -5,8 +5,6 @@ require "decidim/toggle/module_configuration_presenter"
 module Decidim
   module Toggle
     class << self
-      # @param name [String, Symbol]
-      # @return [String] canonical module key stored in {OrganizationModuleConfig#module_name}
       def normalize_module_name(name)
         name.to_s
       end

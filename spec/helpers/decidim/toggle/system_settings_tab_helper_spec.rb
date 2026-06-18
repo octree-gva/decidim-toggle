@@ -40,6 +40,33 @@ module Decidim
         expect(html).to include("settings_tab_form_security")
         expect(html).to include('action="/decidim_toggle/system/organizations/1/settings_tab/security"')
       end
+
+      describe "#encryption_configured?" do
+        around do |example|
+          Decidim::AttributeEncryptor.remove_instance_variable(:@cryptor) if Decidim::AttributeEncryptor.instance_variable_defined?(:@cryptor)
+          example.run
+          Decidim::AttributeEncryptor.remove_instance_variable(:@cryptor) if Decidim::AttributeEncryptor.instance_variable_defined?(:@cryptor)
+        end
+
+        it "returns true when encryption round-trips" do
+          allow(Rails.application).to receive(:secret_key_base).and_return(SecureRandom.hex(64))
+
+          expect(helper_host.encryption_configured?).to be(true)
+        end
+
+        it "returns false when secret_key_base is missing" do
+          allow(Rails.application).to receive(:secret_key_base).and_return(nil)
+
+          expect(helper_host.encryption_configured?).to be(false)
+        end
+
+        it "returns false when encryption fails" do
+          allow(Rails.application).to receive(:secret_key_base).and_return("too-short")
+          allow(Decidim::AttributeEncryptor).to receive(:encrypt).and_raise(ArgumentError)
+
+          expect(helper_host.encryption_configured?).to be(false)
+        end
+      end
     end
   end
 end

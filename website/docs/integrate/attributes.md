@@ -133,6 +133,47 @@ end
 
 Built-in example: `Decidim::Toggle::UpdateOmniauthForm` (`info` when `decidim-space_page` is present).
 
+## Expose attributes to JS
+
+Expose selected config values to the browser as a flat global `window.DecidimToggle` hash (participant and admin layouts). Opt in explicitly — secrets such as API keys are **not** exposed unless you mark them.
+
+Include `Decidim::Toggle::ExposeAttributesToJs` on your form:
+
+```ruby
+module MyModule
+  class AdminConfigForm < Decidim::Form
+    include Decidim::Toggle::TabForm
+    include Decidim::Toggle::ModuleConfigForm
+    include Decidim::Toggle::ExposeAttributesToJs
+
+    self.module_config_name = "my_module"
+    mimic :organization
+
+    attribute :enabled, :boolean
+    attribute :search_bar, :boolean
+    expose_to_javascript :enabled, :search_bar
+  end
+end
+```
+
+| Mechanism | Use |
+|-----------|-----|
+| `expose_to_javascript :attr` | List attributes to expose on `window.DecidimToggle` |
+
+**Key format:** `"<module_config_name>.<attribute_name>"` (dot in the string), e.g. `"my_module.enabled"`.
+
+**Supported value types:** boolean, string, integer, array, hash. Translatable attributes are exposed as the raw locale hash.
+
+**Client usage:**
+
+```js
+if (window.DecidimToggle["my_module.enabled"]) {
+  // ...
+}
+```
+
+Values reflect the current organization (`current_organization`). Server-side reads remain `Decidim::Toggle.config_for(organization, :my_module)`.
+
 ## See also
 
 - [Add a settings tab](./quickstart.md)

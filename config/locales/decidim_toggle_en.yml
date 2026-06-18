@@ -1,14 +1,11 @@
 en:
-  decidim:
-    system:
-      organizations:
-        edit:
-          invitation_pending_title: "Invitation pending"
-          invitation_pending_body: "The first administrator of the organization still did not accept the invitation"
-
   decidim_toggle:
     system:
       organizations:
+        invitation_pending_title: "Invitation pending"
+        invitation_pending_body: "The first administrator of the organization still did not accept the invitation"
+        encryption_not_configured: "Error: Please configure SECRET_KEY_BASE or master.key to edit this organization."
+        encryption_not_configured_title: "Encryption not configured"
         settings_tabs:
           name: "Name"
           omniauth: "OmniAuth"
@@ -20,6 +17,7 @@ en:
           language_placeholder: "Default and available locales (configured in the form above)."
         form_tab:
           save: "Save"
+          cancel: "Cancel"
           success: "Settings updated successfully."
         authorizations_tab:
           legend: "Verification workflows"

@@ -12,18 +12,6 @@ module Decidim
 
       attr_reader :form
 
-      def respond_to_missing?(name, include_private = false)
-        @form.respond_to?(name, include_private)
-      end
-
-      def method_missing(name, *args, &)
-        if @form.respond_to?(name)
-          @form.public_send(name, *args, &)
-        else
-          super
-        end
-      end
-
       private
 
       def define_accessors!

@@ -4,10 +4,10 @@
   <h1 class="h1"><%= t ".title" %></h1>
 <% end %>
 <% if @organization&.users&.first&.invitation_pending? %>
-  <div id="decidim-toggle-callout" class="callout callout--warning invitation_pending form__wrapper-block flex-col-reverse md:flex-row justify-between mt-8">
+  <div id="decidim-toggle-callout" class="callout warning invitation_pending form__wrapper-block flex-col-reverse md:flex-row justify-between mt-8">
     <div class="callout-content">
-      <h4 class="invitation_pending_title"><%= t(".invitation_pending_title") %></h4>
-      <p class="invitation_pending_body"><%= t(".invitation_pending_body") %></p>
+      <h4 class="invitation_pending_title h4 font-bold pb-2"><%= t("decidim_toggle.system.organizations.invitation_pending_title") %></h4>
+      <p class="invitation_pending_body"><%= t("decidim_toggle.system.organizations.invitation_pending_body") %></p>
     </div>
     <div class="callout-actions">
       <%= link_to t(".resend_invitation"),
@@ -17,4 +17,4 @@
   </div>
 <% end %>
 
-<%= render "decidim_toggle/system/organizations/settings_tabs", organization: @organization, form: @form %>
+<%= render "decidim_toggle/system/organizations/settings_tabs", organization: @organization %>

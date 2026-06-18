@@ -3,13 +3,12 @@
 <%= decidim_toggle_settings_tab_form(organization, tab) do |tf| %>
   <fieldset>
     <legend class="form-legend"><%= t("decidim_toggle.system.organizations.security_tab.access_legend") %></legend>
-    <p>
-      <%= tf.check_box :force_users_to_authenticate_before_access_organization %>
-      <%= tf.label :force_users_to_authenticate_before_access_organization, t("decidim_toggle.system.organizations.security_tab.force_auth_label") %>
-    </p>
 
     <p>
-      <label class="form-label"><%= t("decidim_toggle.system.organizations.security_tab.sign_in_mode") %></label>
+      <%= tf.check_box :force_users_to_authenticate_before_access_organization %>
+    </p>
+    <p class="mt-6">
+      <label class="form-legend"><%= t("decidim_toggle.system.organizations.security_tab.sign_in_mode") %></label>
       <%= tf.fields_for_names(:users_registration_mode) %>
     </p>
   </fieldset>
