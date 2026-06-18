@@ -42,6 +42,15 @@ Optional view: `partial:` (field body) or `form_layout_partial:` (full tab) on `
 
 Full walkthrough: [doc site reading order](website/docs/README.md#integrator-reading-order) (`cd website && yarn start`).
 
+## Deface overrides
+
+| Virtual path | Name | Purpose |
+|--------------|------|---------|
+| `layouts/decidim/_decidim_javascript` | `toggle_add_javascript_config_public` | Injects `window.DecidimToggle` on the participant site |
+| `layouts/decidim/admin/_header` | `toggle_add_javascript_config_admin` | Injects `window.DecidimToggle` in the admin layout |
+
+Files: `app/overrides/add_toggle_javascript_public.rb`, `app/overrides/add_toggle_javascript_admin.rb`.
+
 ## Host app install
 
 ```ruby

@@ -6,6 +6,8 @@ require "decidim/toggle/settings_tab_registry"
 require "decidim/toggle/settings_tab_item"
 require "decidim/toggle/settings_tabs"
 require "decidim/toggle/module_config"
+require "decidim/toggle/expose_attributes_to_js"
+require "decidim/toggle/javascript_config"
 require "decidim/toggle/engine"
 
 module Decidim
@@ -18,6 +20,13 @@ module Decidim
     # @return [Boolean]
     def self.gem_present?(gem_name)
       GemRegistry.present?(gem_name)
+    end
+
+    # @param organization [Decidim::Organization, nil]
+    # @param registry_name [Symbol] settings tab registry (default +:organization_settings+)
+    # @return [Hash{String => Object}] flat keys like +"decidim_geo.enabled"+
+    def self.javascript_config_for(organization, registry_name: :organization_settings)
+      JavascriptConfig.for(organization, registry_name:)
     end
   end
 end

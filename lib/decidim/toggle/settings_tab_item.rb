@@ -22,10 +22,6 @@ module Decidim
 
       attr_accessor :position
 
-      def custom_tab?
-        partial.present?
-      end
-
       def form_tab?
         form_class.present? && command_class.present?
       end

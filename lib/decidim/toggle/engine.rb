@@ -1,18 +1,28 @@
 # frozen_string_literal: true
 
 require "rails"
+require "deface"
 require "decidim/core"
 require "decidim/system"
 # After core so Decidim::FormBuilder autoload pulls Map, TranslatableAttributes, etc.
 require "decidim/toggle/settings_form_builder"
 require "decidim/toggle/organization_settings_tabs"
+require "decidim/toggle/expose_attributes_to_js_validator"
 
 module Decidim
   module Toggle
     class Engine < ::Rails::Engine
       isolate_namespace Decidim::Toggle
 
-      config.paths["config/routes"] = [root.join("config", "routes.rb").to_s]
+      routes do
+        scope path: "system" do
+          patch "organizations/:organization_id/settings_tab/:tab_id",
+                controller: "/decidim_toggle/system/settings_tab",
+                action: :update,
+                as: :update_settings_tab_organization
+        end
+      end
+
       initializer "decidim_toggle.mount_routes" do
         Rails.application.routes.append do
           mount Decidim::Toggle::Engine, at: "/decidim_toggle", as: "decidim_toggle"
@@ -35,9 +45,12 @@ module Decidim
       end
 
       config.to_prepare do
+        Decidim::Toggle::ExposeAttributesToJsValidator.validate! if Rails.env.development? || Rails.env.test?
+
         ActiveSupport.on_load(:action_view) do
           include Decidim::Toggle::SystemLocaleHelper
           include Decidim::Toggle::SystemSettingsTabHelper
+          include Decidim::Toggle::JavascriptConfigHelper
         end
       end
     end
