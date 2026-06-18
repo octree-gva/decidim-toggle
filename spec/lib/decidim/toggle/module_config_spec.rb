@@ -44,7 +44,7 @@ module Decidim
           expect(result["x"]).to eq(1)
         end
 
-        it "returns a presenter when a tab registered module_name with a form" do
+        it "returns a normalized hash when a tab registered module_name with a form" do
           form_class = demo_form_class
           SettingsTabRegistry.register(:module_config_spec) do |tabs|
             tabs.add_tab :geo, "Geo", form: form_class, command: Integer, module_name: :decidim_geo
@@ -53,8 +53,20 @@ module Decidim
           described_class.save_config!(organization, :decidim_geo, { "enabled" => true })
 
           result = described_class.config_for(organization, :decidim_geo, registry_name: :module_config_spec)
-          expect(result).to be_a(ModuleConfigurationPresenter)
-          expect(result.enabled).to be(true)
+          expect(result).to be_a(ActiveSupport::HashWithIndifferentAccess)
+          expect(result[:enabled]).to be(true)
+        end
+
+        it "normalizes nil boolean to false when a form is registered" do
+          form_class = demo_form_class
+          SettingsTabRegistry.register(:module_config_spec) do |tabs|
+            tabs.add_tab :geo, "Geo", form: form_class, command: Integer, module_name: :decidim_geo
+          end
+
+          described_class.save_config!(organization, :decidim_geo, {})
+
+          result = described_class.config_for(organization, :decidim_geo, registry_name: :module_config_spec)
+          expect(result[:enabled]).to be(false)
         end
       end
 

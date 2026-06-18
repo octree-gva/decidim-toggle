@@ -16,7 +16,7 @@ module Decidim
 
         if entry && entry[:form]
           form = build_form_from_hash(entry[:form], organization, raw)
-          ModuleConfigurationPresenter.new(form)
+          ModuleConfigurationPresenter.new(form).to_config_hash.with_indifferent_access
         else
           raw.with_indifferent_access
         end

@@ -43,6 +43,11 @@ module Decidim
         expect(p.enabled).to be(true)
         expect(p.enabled?).to be(true)
       end
+
+      it "exports normalized attributes as a hash" do
+        p = build_presenter(enabled: nil, tags: nil, meta: nil)
+        expect(p.to_config_hash).to eq("enabled" => false, "tags" => [], "meta" => {})
+      end
     end
   end
 end

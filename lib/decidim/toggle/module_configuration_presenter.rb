@@ -12,6 +12,15 @@ module Decidim
 
       attr_reader :form
 
+      def to_config_hash
+        @form.class.attribute_names.each_with_object({}) do |attr, hash|
+          next if attr == "id"
+
+          type = @form.class.attribute_types[attr]
+          hash[attr] = normalize(@form.public_send(attr), attr, type)
+        end
+      end
+
       private
 
       def define_accessors!

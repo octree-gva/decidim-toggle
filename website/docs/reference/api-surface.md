@@ -50,11 +50,13 @@ Route helper: `decidim_toggle_update_settings_tab_organization_path`.
 ## Read / write config
 
 ```ruby
-Decidim::Toggle.config_for(organization, :my_module)
+Decidim::Toggle.config_for(organization, :my_module) # => ActiveSupport::HashWithIndifferentAccess
 Decidim::Toggle.save_config!(organization, :my_module, attrs, merge: true)
 Decidim::Toggle.javascript_config_for(organization) # => { "my_module.enabled" => true, ... }
 Decidim::Toggle.gem_present?("decidim-other")  # optional gem in bundle
 ```
+
+`config_for` returns a normalized hash (`nil` booleans → `false`, `nil` arrays → `[]`, `nil` hashes → `{}`). Use key access: `config_for(org, :my_module)[:enabled]`.
 
 ## Expose attributes to JS
 

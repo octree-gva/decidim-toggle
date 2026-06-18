@@ -93,7 +93,7 @@ Built-in examples in `lib/decidim/toggle/organization_settings_tabs.rb` (omniaut
 1. Boot the host app.
 2. **System → Organizations → Edit** → open **My module**.
 3. Toggle **enabled**, save.
-4. Console: `Decidim::Toggle.config_for(organization, :my_module).enabled?`
+4. Console: `Decidim::Toggle.config_for(organization, :my_module)[:enabled]`
 
 ## Runtime API
 

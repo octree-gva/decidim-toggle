@@ -19,26 +19,26 @@ module Decidim
         private
 
         def build_from_registry(organization, registry)
-          registry.module_configs.each_with_object({}) do |(module_name, entry), config|
+          registry.module_configs.each_with_object({}) do |(module_name, entry), flat_config|
             form_class = entry[:form]
             next unless form_class&.included_modules&.include?(ExposeAttributesToJs)
 
             exposed = form_class.javascript_exposed_attribute_names
             next if exposed.empty?
 
-            presenter = Decidim::Toggle.config_for(organization, module_name, registry_name: registry.registry_name)
-            merge_exposed_attributes!(config, module_name, presenter, form_class, exposed)
+            module_config = Decidim::Toggle.config_for(organization, module_name, registry_name: registry.registry_name)
+            merge_exposed_attributes!(flat_config, module_name, module_config, form_class, exposed)
           end
         end
 
-        def merge_exposed_attributes!(config, module_name, presenter, form_class, exposed)
+        def merge_exposed_attributes!(flat_config, module_name, module_config, form_class, exposed)
           exposed.each do |attr|
             type = form_class.attribute_types[attr]
-            raw = presenter.public_send(attr)
+            raw = module_config[attr]
             value = serialize_value(raw, type)
             next if value.nil? && !supported_scalar?(raw)
 
-            config["#{module_name}.#{attr}"] = value
+            flat_config["#{module_name}.#{attr}"] = value
           end
         end
 
