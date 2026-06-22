@@ -4,11 +4,11 @@
   <% organization = local_assigns[:organization] %>
   <% tabs = Decidim::Toggle::SettingsTabs.new(:organization_settings) %>
   <% tabs.build_for(self) %>
-  <div data-component="accordion" data-multiselectable="false" data-collapsible="false" id="decidim-toggle-settings-tabs">
+  <div class="js-decidim-toggle-settings-tabs" id="decidim-toggle-settings-tabs">
     <ul class="tab-x-container tabs-<%= tabs.items.size %>">
       <% tabs.items.each do |tab| %>
         <li>
-          <button type="button" id="trigger-toggle-<%= tab.identifier %>" class="tab-x" data-controls="panel-toggle-<%= tab.identifier %>" <%= "data-open=\"true\"".html_safe if tab.open? %>>
+          <button type="button" id="trigger-toggle-<%= tab.identifier %>" class="tab-x" data-controls="panel-toggle-<%= tab.identifier %>" aria-expanded="<%= tab.open? ? "true" : "false" %>" <%= "data-open=\"true\"".html_safe if tab.open? %>>
             <%= tab.label %>
           </button>
         </li>
