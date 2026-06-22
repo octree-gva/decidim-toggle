@@ -23,6 +23,11 @@ module Decidim
         end
       end
 
+      initializer "decidim_toggle.ignore_deface_overrides_in_zeitwerk" do
+        overrides_path = root.join("app/overrides").to_s
+        Rails.autoloaders.main.ignore(overrides_path) if defined?(Rails.autoloaders) && Dir.exist?(overrides_path)
+      end
+
       initializer "decidim_toggle.mount_routes" do
         Rails.application.routes.append do
           mount Decidim::Toggle::Engine, at: "/decidim_toggle", as: "decidim_toggle"

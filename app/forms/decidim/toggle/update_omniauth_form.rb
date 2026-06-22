@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "decidim/system/base_organization_form"
-
 module Decidim
   module Toggle
     class UpdateOmniauthForm < Decidim::System::BaseOrganizationForm
