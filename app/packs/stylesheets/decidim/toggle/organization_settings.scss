@@ -70,12 +70,13 @@
     @apply mb-3 !important;
   }
 
+
   .form__wrapper .field:last-child {
     @apply mb-0;
   }
 
   .form__wrapper .field.is-disabled {
-    @apply opacity-60 cursor-not-allowed;
+    @apply opacity-30 cursor-not-allowed;
 
     label,
     input {
