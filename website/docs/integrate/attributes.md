@@ -82,6 +82,21 @@ en:
 
 Lookup: `activemodel.attributes.<model>.helptext.<attribute_name>`.
 
+## Disabled fields
+
+Disable a field in the default builder by implementing either:
+
+- `#attribute_disabled?(attribute)` on the form instance, or
+- `#disabled_for_<attribute>?` per attribute
+
+```ruby
+def attribute_disabled?(attribute)
+  attribute == :beta_enabled && !Decidim::Toggle.gem_present?("decidim-beta")
+end
+```
+
+Disabled inputs are not submitted; keep your command aligned (ignore or reject unknown params).
+
 ## Builder methods
 
 | Method | Use |

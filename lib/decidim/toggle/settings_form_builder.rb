@@ -84,14 +84,26 @@ module Decidim
             end
           end
         else
+          options = field_html_options_for(name)
           case type
           when :string
-            name.to_s == "secondary_hosts" ? text_area(name) : text_field(name)
-          when :integer then number_field(name)
-          when :boolean then check_box(name)
-          else text_field(name)
+            name.to_s == "secondary_hosts" ? text_area(name, options) : text_field(name, options)
+          when :integer then number_field(name, options)
+          when :boolean then check_box(name, options)
+          else text_field(name, options)
           end
         end
+      end
+
+      def field_html_options_for(name)
+        attribute_disabled?(name) ? { disabled: true } : {}
+      end
+
+      def attribute_disabled?(name)
+        method = :"disabled_for_#{name}?"
+        return object.public_send(method) if object.respond_to?(method)
+
+        object.attribute_disabled?(name) if object.respond_to?(:attribute_disabled?)
       end
 
       def collection_for(attribute)

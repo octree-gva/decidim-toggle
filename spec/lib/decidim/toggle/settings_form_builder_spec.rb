@@ -77,6 +77,25 @@ module Decidim
         end
       end
 
+      it "disables fields when the form implements attribute_disabled?" do
+        form_class = Class.new(Decidim::Form) do
+          attribute :enabled, :boolean
+          attribute :locked, :boolean
+
+          def attribute_disabled?(attribute)
+            attribute == :locked
+          end
+        end
+        form = form_class.from_params(organization: { enabled: true, locked: false })
+        template = ActionView::Base.with_empty_template_cache.new(ActionView::LookupContext.new([]), {}, nil)
+        builder = described_class.new(:organization, form, template, {})
+
+        html = builder.all_fields
+        expect(html).to include('name="organization[enabled]"')
+        expect(html).not_to include('organization[enabled]" disabled')
+        expect(html).to include('name="organization[locked]" disabled="disabled"')
+      end
+
       it "renders boolean fields, text areas, and collection inputs" do
         organization = create(:organization, secondary_hosts: %w(extra.example.org))
         template = ActionView::Base.with_empty_template_cache.new(ActionView::LookupContext.new([]), {}, nil)
