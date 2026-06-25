@@ -11,6 +11,8 @@ description: Form, engine registration, optional view, verify
 
 Default path: **`ModuleConfigForm`** + **`UpdateModuleConfigCommand`**.
 
+Form concerns (`ModuleConfigForm`, `TabForm`, `InformativeCallouts`, `ExposeAttributesToJs`) load with `decidim-toggle` — just `include` them in your form; no extra `require`.
+
 ## 1. Form
 
 ```ruby

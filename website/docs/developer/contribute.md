@@ -27,7 +27,9 @@ lib/decidim/toggle/settings_tabs.rb          # add_tab DSL
 lib/decidim/toggle/settings_tab_registry.rb  # form/command map
 lib/decidim/toggle/organization_settings_tabs.rb
 app/commands/decidim/toggle/update_module_config_command.rb
-app/forms/concerns/decidim/toggle/module_config_form.rb
+lib/decidim/toggle/module_config_form.rb
+lib/decidim/toggle/tab_form.rb
+lib/decidim/toggle/informative_callouts.rb
 app/controllers/decidim_toggle/system/settings_tab_controller.rb
 ```
 
