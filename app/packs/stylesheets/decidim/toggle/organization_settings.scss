@@ -76,10 +76,10 @@
   }
 
   .form__wrapper .field.is-disabled {
-    @apply opacity-30 cursor-not-allowed;
-
+    @apply cursor-not-allowed;
     label,
     input {
+      opacity: 0.33;
       @apply cursor-not-allowed;
     }
   }
