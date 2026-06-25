@@ -8,6 +8,8 @@ module Decidim
     #     include Decidim::Toggle::InformativeCallouts
     #
     #     info "Helpful context for integrators."
+    #     info :dynamic_message_method
+    #     info ->(form) { "Hello #{form.name}" }
     #     warning "Check this before saving.", if_predicate: ->(form) { form.some_flag? }
     #     danger "Destructive change.", if_predicate: ->(_) { Decidim::Toggle.gem_present?("decidim-other") }
     #   end
@@ -29,6 +31,14 @@ module Decidim
           return true if if_predicate.nil?
 
           if_predicate.call(form)
+        end
+
+        def message_for(form)
+          case message
+          when Proc then message.call(form)
+          when Symbol then form.public_send(message)
+          else message.to_s
+          end
         end
       end
 

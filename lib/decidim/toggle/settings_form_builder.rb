@@ -21,7 +21,7 @@ module Decidim
         callouts = entries.map do |entry|
           @template.cell(
             "decidim/announcement",
-            entry.message,
+            entry.message_for(object),
             callout_class: CALLOUT_CLASS_BY_TYPE.fetch(entry.type)
           )
         end

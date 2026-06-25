@@ -114,24 +114,52 @@ module MyModule
 
     info "Defaults apply to new organizations only."
 
-    warning "Disabling removes public access.",
-            if_predicate: ->(form) { form.enabled == false }
+    info :installed_modules_callout,
+         if_predicate: ->(form) { form.missing_modules.any? }
+
+    warning ->(form) { "Disabling removes public access to #{form.module_label}." },
+             if_predicate: ->(form) { form.enabled == false }
 
     danger "Requires decidim-other in the Gemfile.",
            if_predicate: ->(*) { Decidim::Toggle.gem_present?("decidim-other") }
+
+    def installed_modules_callout
+      I18n.t("my_module.admin.missing_modules", missing: missing_modules.join(", "))
+    end
   end
 end
 ```
 
 | Macro | Style | When to use |
 |-------|-------|-------------|
-| `info "message"` | Info (blue) | Context, pointers to other tabs |
+| `info "message"` | Info (blue) | Static context, pointers to other tabs |
+| `info :method_name` | Info (blue) | Dynamic copy from a form instance method |
+| `info ->(form) { ... }` | Info (blue) | Inline dynamic copy |
 | `warning "message", if_predicate:` | Warning (yellow) | Reversible caution before save |
 | `danger "message", if_predicate:` | Alert (red) | Strong caution, destructive or risky change |
 
 `if_predicate` receives the form instance; omit it to always show the callout.
 
-Built-in example: `Decidim::Toggle::UpdateOmniauthForm` (`info` when `decidim-space_page` is present).
+`message` (first argument to `info` / `warning` / `danger`) may be:
+
+| Form | Resolved at render time by `InformativeEntry#message_for` |
+|------|-----------------------------------------------------------|
+| `String` | Used as-is |
+| `Symbol` | `form.public_send(symbol)` — e.g. `info :installed_modules_callout` |
+| `Proc` | `proc.call(form)` — e.g. `info ->(form) { ... }` |
+
+Dynamic example (symbol + conditional visibility):
+
+```ruby
+info :installed_modules_callout,
+     if_predicate: ->(form) { form.missing_modules.any? }
+
+def installed_modules_callout
+  I18n.t("my_module.admin.missing_modules", missing: missing_modules.join(", "))
+end
+```
+
+Callouts render via `SettingsFormBuilder#informative_callouts` in the default tab shell (`decidim_toggle_settings_tab_form`), **above** the field body or `partial:`.
 
 ## Expose attributes to JS
 
