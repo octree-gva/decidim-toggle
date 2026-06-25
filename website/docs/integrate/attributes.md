@@ -97,6 +97,8 @@ end
 
 Disabled inputs are not submitted; keep your command aligned (ignore or reject unknown params).
 
+The field wrapper gets `class="field is-disabled"` (Decidim convention) so you can style muted labels/inputs in CSS.
+
 ## Builder methods
 
 | Method | Use |

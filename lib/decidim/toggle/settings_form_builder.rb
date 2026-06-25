@@ -30,7 +30,7 @@ module Decidim
 
       def all_fields
         fields = attribute_names.map do |name|
-          @template.content_tag(:div, input_field(name), class: "field")
+          @template.content_tag(:div, input_field(name), class: field_wrapper_classes(name))
         end
         safe_join(fields)
       end
@@ -41,7 +41,7 @@ module Decidim
         fields = names.filter_map do |name|
           next unless object.class.respond_to?(:attribute_types) && object.class.attribute_types.has_key?(name)
 
-          @template.content_tag(:div, input_field(name.to_sym), class: "field")
+          @template.content_tag(:div, input_field(name.to_sym), class: field_wrapper_classes(name))
         end
         safe_join(fields)
       end
@@ -99,11 +99,18 @@ module Decidim
         attribute_disabled?(name) ? { disabled: true } : {}
       end
 
+      def field_wrapper_classes(name)
+        attribute_disabled?(name) ? "field is-disabled" : "field"
+      end
+
       def attribute_disabled?(name)
+        name = name.to_sym
         method = :"disabled_for_#{name}?"
         return object.public_send(method) if object.respond_to?(method)
 
-        object.attribute_disabled?(name) if object.respond_to?(:attribute_disabled?)
+        return object.attribute_disabled?(name) if object.respond_to?(:attribute_disabled?)
+
+        false
       end
 
       def collection_for(attribute)

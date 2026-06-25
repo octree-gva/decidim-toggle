@@ -94,6 +94,7 @@ module Decidim
         expect(html).to include('name="organization[enabled]"')
         expect(html).not_to include('organization[enabled]" disabled')
         expect(html).to include('name="organization[locked]" disabled="disabled"')
+        expect(html).to include('class="field is-disabled"')
       end
 
       it "renders boolean fields, text areas, and collection inputs" do

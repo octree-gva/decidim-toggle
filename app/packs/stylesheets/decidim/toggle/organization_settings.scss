@@ -74,6 +74,15 @@
     @apply mb-0;
   }
 
+  .form__wrapper .field.is-disabled {
+    @apply opacity-60 cursor-not-allowed;
+
+    label,
+    input {
+      @apply cursor-not-allowed;
+    }
+  }
+
   fieldset {
     @apply border-0 rounded-none m-0 mb-2 px-2 pt-2 pb-1;
   }
