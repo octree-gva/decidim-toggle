@@ -1,0 +1,5 @@
+<% organization = local_assigns[:organization] %>
+<% tab = local_assigns[:tab] %>
+<%= decidim_toggle_settings_tab_form(organization, tab) do |tf| %>
+  <%= render "decidim/system/organizations/omniauth_settings", f: tf %>
+<% end %>

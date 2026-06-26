@@ -2,32 +2,60 @@
 sidebar_position: 1
 slug: /
 title: Overview
-description: Register organization settings tabs from your Decidim module
+description: Tabbed System administration for Decidim — register org settings from your module
 ---
 
 # Decidim Toggle
 
-Register a **settings tab** in **System → Organizations**. Each tab is one **Form** and one **Command**.
+decidim-toggle rewrites **System → Organizations** in the Decidim admin. Instead of one long form, settings are grouped in tabs. The gem ships built-in tabs (name, OmniAuth, SMTP, language, authorizations, security, file upload) and exposes a small API so your `decidim-*` module can add its own tab.
 
-**Who reads this:** anyone new to the gem. Module developers continue to [Integrate](./integrate/index.md).
+With this gem you **add a tab**, **plug in your form and command**, and **read or write configuration** per organization through `Decidim::Toggle.config_for` — no extra tables .
 
-## Start here
 
-| You build | Go to |
-|-----------|-------|
-| A `decidim-*` module with org settings | [Integrate → Add a settings tab](./integrate/quickstart.md) |
-| Changes to `decidim-toggle` itself | [Contribute](./developer/contribute.md) |
-| API lookup while coding | [API surface](./reference/api-surface.md) |
+<div class="full">
 
-## How it fits
+![Decidim Toggle /system menu for security](/img/screenshots_security_tab.png)
 
-```text
-Your engine (after decidim_toggle.organization_settings_tabs)
-  └── Decidim::Toggle.settings_tabs(:organization_settings) → add_tab form:, command:
-        └── System → Organizations → your tab → PATCH → your Command
+</div>
+
+
+## Compare
+
+
+|  | Decidim | Decidim Toggle |
+| -- | ------| --------------- |
+| Update tenant name, host | ✅ | ✅ |
+| Advanced configuration | ✅ | ✅ |
+| Update SMTP credentials | ✅ | ✅ |
+| Configure machine translation | ❌ | ✅ |
+| Change locales | ❌ | ✅ |
+| Can extend the /system | ❌ | ✅ |
+
+
+
+## Get started
+
+<div class="full">
+
+![How it works](/img/schema_overview.png)
+
+</div>
+
+
+### Use in your `decidim-*` gem
+
+Add the dependency in your gemspec:
+
+```ruby
+# decidim-my_module.gemspec
+s.add_dependency "decidim-toggle"
 ```
 
-## Host install
+Then register a tab in your engine — full steps in [Add a settings tab](./integrate/quickstart.md).
+
+### Install in a Decidim app (optional)
+
+Add to the Gemfile:
 
 ```ruby
 gem "decidim-toggle"
@@ -39,9 +67,14 @@ rails decidim_toggle:install:migrations
 rails db:migrate
 ```
 
-Decidim **~> 0.29**.
+## Compatibility
+
+Tested on Decidim **0.29**. Works on **0.31** as well (same System organization surface and Form/Command contract).
 
 ## See also
 
-- [Integrator reading order](./README.md#integrator-reading-order)
-- [Integrate](./integrate/index.md)
+| You are… | Read |
+|----------|------|
+| Building a module tab | [Integrate](./integrate/index.md) → [Add a settings tab](./integrate/quickstart.md) |
+| Hacking decidim-toggle | [Contribute](/contributing) |
+| Something wrong | [GitLab issues](https://git.octree.ch/decidim/vocacity/decidim-modules/decidim-toggle/-/issues) |

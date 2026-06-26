@@ -22,8 +22,8 @@ module Decidim
     end
 
     describe "Decidim::Toggle.gem_present?" do
-      it "delegates to GemRegistry" do
-        expect(Decidim::Toggle.gem_present?("decidim-core")).to eq(GemRegistry.present?("decidim-core"))
+      it "returns true for gems in the bundle" do
+        expect(Decidim::Toggle.gem_present?("decidim-core")).to be(true)
       end
     end
   end

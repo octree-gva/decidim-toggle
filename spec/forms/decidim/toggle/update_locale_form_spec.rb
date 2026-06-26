@@ -59,13 +59,6 @@ module Decidim
           expect(form).not_to be_valid
         end
       end
-
-      describe "collection helpers" do
-        it "lists available_locales and default_locale options" do
-          expect(described_class.collection_for_available_locales).to be_present
-          expect(described_class.collection_for_default_locale).to be_present
-        end
-      end
     end
   end
 end

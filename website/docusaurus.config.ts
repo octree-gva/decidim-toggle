@@ -4,7 +4,7 @@ import type * as Preset from '@docusaurus/preset-classic';
 
 const config: Config = {
   title: 'Decidim Toggle',
-  tagline: 'Register organization settings tabs from your Decidim module',
+  tagline: 'Tabbed System administration — register org settings from your Decidim module',
   favicon: 'img/logo.svg',
 
   url: 'https://octree.ch',
@@ -69,12 +69,12 @@ const config: Config = {
               to: '/integrate',
             },
             {
-              label: 'Attributes',
-              to: '/integrate/attributes',
+              label: 'Contribute',
+              to: '/contributing',
             },
             {
-              label: 'API reference',
-              to: '/reference/api-surface',
+              label: 'Code of conduct',
+              to: '/code-of-conduct',
             },
           ],
         },
@@ -88,7 +88,7 @@ const config: Config = {
           ],
         },
       ],
-      copyright: 'Built with Docusaurus.',
+      copyright: 'Built with Docusaurus. Powered by <a href="https://voca.city">Voca</a>.',
     },
     prism: {
       theme: prismThemes.github,

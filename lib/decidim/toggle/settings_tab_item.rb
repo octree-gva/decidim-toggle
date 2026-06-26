@@ -6,19 +6,16 @@ module Decidim
       def initialize(identifier, label, options = {})
         @identifier = identifier
         @label = label
-        @partial = options[:partial]
         @form_layout_partial = options[:form_layout_partial]
         @form_class = options[:form_class]
         @command_class = options[:command_class]
         @position = options[:position] || Float::INFINITY
         @if = options[:if]
         @open = options.fetch(:open, false)
-        @extra_locals = options[:extra_locals] || {}
         @module_name = options[:module_name]
       end
 
-      attr_reader :identifier, :label, :partial, :form_layout_partial, :form_class, :command_class, :extra_locals,
-                  :module_name
+      attr_reader :identifier, :label, :form_layout_partial, :form_class, :command_class, :module_name
 
       attr_accessor :position
 

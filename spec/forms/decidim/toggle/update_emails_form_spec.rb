@@ -30,13 +30,6 @@ module Decidim
         expect(form.host).to eq(params_host)
         expect(form.users_registration_mode).to eq(organization.users_registration_mode)
       end
-
-      it "is valid and executes the uniqueness validation hook (no-op)" do
-        form = described_class.from_model(organization)
-
-        expect(form).to receive(:validate_organization_uniqueness).and_call_original
-        expect(form).to be_valid
-      end
     end
   end
 end

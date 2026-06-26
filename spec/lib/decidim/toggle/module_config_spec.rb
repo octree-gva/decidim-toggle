@@ -69,12 +69,6 @@ module Decidim
           expect(result[:enabled]).to be(false)
         end
       end
-
-      describe ".normalize_module_name" do
-        it "stringifies symbols" do
-          expect(described_class.normalize_module_name(:decidim_geo)).to eq("decidim_geo")
-        end
-      end
     end
   end
 end

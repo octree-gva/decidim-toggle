@@ -1,17 +1,16 @@
 ---
 sidebar_position: 3
 title: Attributes
-description: Form attributes and callouts supported by SettingsFormBuilder
+description: Form attributes supported by SettingsFormBuilder
 ---
 
 # Attributes
 
 **Who reads this:** module developers defining tab form fields.  
-**Prerequisite:** [Add a settings tab](./quickstart.md) step 1 (form class).  
-**Next:** apply in [quickstart step 3](./quickstart.md#3-optional-customize-form-view) if you use a partial, or save with the default `all_fields`.
+**Prerequisite:** [Add a settings tab](./quickstart.md) — form class from step 1.  
+**Next:** [Informative callouts](./informative_callout.md) or [Customize views](./customize-views.md).
 
-Declare attributes on your `Decidim::Form`.  
-`Decidim::Toggle::SettingsFormBuilder` renders them via `all_fields` (default tab) or `fields_for_names` (in a `partial:` / `form_layout_partial:`).
+Declare attributes on your `Decidim::Form`. `Decidim::Toggle::SettingsFormBuilder` renders them via `all_fields` (default tab) or `fields_for_names` (inside a `form_layout_partial:`).
 
 ```ruby
 module MyModule
@@ -110,119 +109,14 @@ Used in views as `f` / `tf` (`Decidim::Toggle::SettingsFormBuilder`).
 
 ## Nested or custom widgets
 
-Nested forms (e.g. `Decidim::System::FileUploadSettingsForm`) or non-standard markup are **not** auto-rendered. Use `partial:` or `form_layout_partial:` — [quickstart step 3](./quickstart.md#3-optional-customize-form-view).
+Nested forms (e.g. `Decidim::System::FileUploadSettingsForm`) or non-standard markup are **not** auto-rendered. Use `form_layout_partial:` — [Customize views](./customize-views.md).
 
-## Informative callouts (info, warning, danger)
-
-Callouts render **above** the tab field body, inside the shared form shell (submit + active-tab field unchanged).
-
-Include `Decidim::Toggle::TabForm` (recommended) or `Decidim::Toggle::InformativeCallouts` on the form class:
-
-```ruby
-module MyModule
-  class AdminConfigForm < Decidim::Form
-    include Decidim::Toggle::TabForm
-    include Decidim::Toggle::ModuleConfigForm
-
-    self.module_config_name = "my_module"
-    mimic :organization
-
-    attribute :enabled, :boolean
-
-    info :defaults_callout
-
-    info :installed_modules_callout,
-         if_predicate: ->(form) { form.missing_modules.any? }
-
-    warning :disable_warning_callout,
-            if_predicate: ->(form) { form.enabled == false }
-
-    danger :other_gem_required_callout,
-           if_predicate: ->(*) { Decidim::Toggle.gem_present?("decidim-other") }
-
-    def defaults_callout
-      "Defaults apply to new organizations only."
-    end
-
-    def installed_modules_callout
-      I18n.t("my_module.admin.missing_modules", missing: missing_modules.join(", "))
-    end
-
-    def disable_warning_callout
-      "Disabling removes public access to #{module_label}."
-    end
-
-    def other_gem_required_callout
-      "Requires decidim-other in the Gemfile."
-    end
-  end
-end
-```
-
-| Macro | Style | When to use |
-|-------|-------|-------------|
-| `info :method_name` | Info (blue) | Context from a form instance method (HTML allowed) |
-| `warning :method_name, if_predicate:` | Warning (yellow) | Reversible caution before save |
-| `danger :method_name, if_predicate:` | Alert (red) | Strong caution, destructive or risky change |
-
-`if_predicate` receives the form instance; omit it to always show the callout.
-
-The first argument is always a **Symbol** naming a method on the form. `InformativeEntry#message_for` calls `form.public_send(symbol)`.
-
-```ruby
-info :installed_modules_callout,
-     if_predicate: ->(form) { form.missing_modules.any? }
-
-def installed_modules_callout
-  I18n.t("my_module.admin.missing_modules_html", missing: missing_modules.join(", "))
-end
-```
-
-Callouts render via `SettingsFormBuilder#informative_callouts` in the default tab shell (`decidim_toggle_settings_tab_form`), **above** the field body or `partial:`.
-
-## Expose attributes to JS
-
-Expose selected config values to the browser as a flat global `window.DecidimToggle` hash (participant and admin layouts). Opt in explicitly — secrets such as API keys are **not** exposed unless you mark them.
-
-Include `Decidim::Toggle::ExposeAttributesToJs` on your form:
-
-```ruby
-module MyModule
-  class AdminConfigForm < Decidim::Form
-    include Decidim::Toggle::TabForm
-    include Decidim::Toggle::ModuleConfigForm
-    include Decidim::Toggle::ExposeAttributesToJs
-
-    self.module_config_name = "my_module"
-    mimic :organization
-
-    attribute :enabled, :boolean
-    attribute :search_bar, :boolean
-    expose_to_javascript :enabled, :search_bar
-  end
-end
-```
-
-| Mechanism | Use |
-|-----------|-----|
-| `expose_to_javascript :attr` | List attributes to expose on `window.DecidimToggle` |
-
-**Key format:** `"<module_config_name>.<attribute_name>"` (dot in the string), e.g. `"my_module.enabled"`.
-
-**Supported value types:** boolean, string, integer, array, hash. Translatable attributes are exposed as the raw locale hash.
-
-**Client usage:**
-
-```js
-if (window.DecidimToggle["my_module.enabled"]) {
-  // ...
-}
-```
-
-Values reflect the current organization (`current_organization`). Server-side reads remain `Decidim::Toggle.config_for(organization, :my_module)`.
+For info, warning, and danger banners above the fields, see [Informative callouts](./informative_callout.md).
 
 ## See also
 
 - [Add a settings tab](./quickstart.md)
-- [API surface](../reference/api-surface.md) — `TabForm`, `partial:`, `form_layout_partial:`
-- [Troubleshooting](./troubleshooting.md)
+- [Informative callouts](./informative_callout.md)
+- [Customize views](./customize-views.md)
+- [JavaScript](./javascript.md)
+- [Integrate](./index.md)

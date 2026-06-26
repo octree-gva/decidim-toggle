@@ -1,54 +1,38 @@
 ---
 sidebar_position: 1
 title: Integrate
-description: Register a settings tab from your Decidim module
+description: Add organization settings from your Decidim module
 ---
 
 # Integrate your module
+Three steps to ship a settings tab: register the tab, declare form attributes, optionally customize the view.
 
-**Who reads this:** developers of a `decidim-*` gem adding organization settings.  
-**Next:** [Add a settings tab](./quickstart.md).
+## 1. Add a tab
 
-## Default: Form + Command
+Register a form and command in your engine after `decidim_toggle.organization_settings_tabs`.
 
-Most modules only need per-organization JSON (enabled flags, small config).  
-No new tables — settings live in `decidim_toggle_organization_module_configs`.
+→ [Add a settings tab](./quickstart.md)
 
-| Piece | Class |
-|-------|-------|
-| Form | Your form including `Decidim::Toggle::ModuleConfigForm` |
-| Command | `Decidim::Toggle::UpdateModuleConfigCommand` |
-| Register | `add_tab` in your engine with `form:`, `command:`, `module_name:` |
+## 2. Define attributes and validation
 
-Walkthrough: [Add a settings tab](./quickstart.md).
+Declare fields on your `Decidim::Form` — booleans, collections, translatable fields.
 
-## Registration (all cases)
+→ [Attributes](./attributes.md) · [Informative callouts](./informative_callout.md) (optional)
 
-In `lib/decidim/my_module/engine.rb`, **after** `decidim_toggle.organization_settings_tabs`:
+## 3. Customize the form view (optional)
 
-```ruby
-initializer "decidim_my_module.organization_settings_tab", after: "decidim_toggle.organization_settings_tabs" do
-  Decidim::Toggle.settings_tabs :organization_settings do |tabs|
-    tabs.add_tab :my_module, "My module",
-                 form: MyModule::AdminConfigForm,
-                 command: Decidim::Toggle::UpdateModuleConfigCommand,
-                 module_name: :my_module
-  end
-end
-```
+Default rendering uses `all_fields`. Override with `form_layout_partial:` when you need custom markup.
 
-## Customize the form view
+→ [Customize views](./customize-views.md)
 
-Optional `partial:` (field body) or `form_layout_partial:` (full layout) on `add_tab`.  
-Details: [quickstart → step 3](./quickstart.md#3-optional-customize-form-view).
+## Optional: JavaScript exposure
 
-## Other cases
+Expose selected settings to `window.DecidimToggle` on the participant and admin frontends.
 
-**Organization columns** (SMTP, host, …) — custom `Decidim::Form` + custom `Decidim::Command`; same `add_tab` contract.
+→ [JavaScript](./javascript.md)
 
 ## See also
 
-1. [Add a settings tab](./quickstart.md) — procedure
-2. [Attributes](./attributes.md) — field types, helptext, callouts
-3. [Troubleshooting](./troubleshooting.md) — common issues
-4. [API surface](../reference/api-surface.md) — option reference
+- [Overview](../index.md)
+- [Contribute](../developer/contribute.md) — hacking the gem itself
+- [GitLab issues](https://git.octree.ch/decidim/vocacity/decidim-modules/decidim-toggle/-/issues)

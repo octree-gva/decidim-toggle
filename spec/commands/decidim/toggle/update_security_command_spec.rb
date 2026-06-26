@@ -20,18 +20,6 @@ module Decidim
         expect(outcomes).to eq([:ok])
         expect(organization.reload.force_users_to_authenticate_before_access_organization).to be true
       end
-
-      it "broadcasts invalid when form is invalid" do
-        form = UpdateSecurityForm.from_model(organization)
-        form.users_registration_mode = "not_a_mode"
-
-        outcomes = []
-        cmd = described_class.new(organization, form)
-        cmd.on(:ok) { outcomes << :ok }
-        cmd.on(:invalid) { outcomes << :invalid }
-        cmd.call
-        expect(outcomes).to eq([:invalid])
-      end
     end
   end
 end

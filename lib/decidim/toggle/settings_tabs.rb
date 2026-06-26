@@ -27,14 +27,10 @@ module Decidim
       # @param form [Class] Decidim::Form subclass (must respond to .from_model(organization))
       # @param command [Class] Decidim::Command that receives (organization, form)
       # @param options [Hash] :position, :if, :open,
-      #                        :partial (optional partial path for the form body),
-      #                        :form_layout_partial (optional partial path instead of default form_tab wrapper)
+      #                        :form_layout_partial (optional full tab layout partial)
       def add_tab(identifier, label, form:, **options)
         command = options.fetch(:command)
         options = { position: (1 + @items.length) }.merge(options)
-
-        partial = options.delete(:partial)
-        options[:partial] = partial if partial.present?
 
         module_name = options[:module_name]
         registry.register_form_tab(identifier, form, command, module_name:)

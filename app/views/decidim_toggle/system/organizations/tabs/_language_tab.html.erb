@@ -1,7 +1,7 @@
 <% organization = local_assigns[:organization] %>
 <% tab = local_assigns[:tab] %>
-<% tab_form = tab.form_class.from_model(organization) %>
 <%= decidim_toggle_settings_tab_form(organization, tab) do |tf| %>
+  <% tab_form = tf.object %>
   <fieldset>
     <legend class="form-legend"><%= t("decidim_toggle.system.organizations.language_tab.legend") %></legend>
     <table class="table-fields">

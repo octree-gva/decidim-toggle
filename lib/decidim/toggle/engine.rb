@@ -53,7 +53,6 @@ module Decidim
         Decidim::Toggle::ExposeAttributesToJsValidator.validate! if Rails.env.development? || Rails.env.test?
 
         ActiveSupport.on_load(:action_view) do
-          include Decidim::Toggle::SystemLocaleHelper
           include Decidim::Toggle::SystemSettingsTabHelper
           include Decidim::Toggle::JavascriptConfigHelper
         end

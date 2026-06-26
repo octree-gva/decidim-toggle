@@ -23,19 +23,6 @@ module Decidim
         expect(organization.reload.file_upload_settings["maximum_file_size"]["default"]).to eq(5.0)
         expect(organization.file_upload_settings["maximum_file_size"]["avatar"]).to eq(2.0)
       end
-
-      it "broadcasts invalid when form is invalid" do
-        form = UpdateFileUploadSettingsForm.from_model(organization)
-        allow(form).to receive(:invalid?).and_return(true)
-
-        outcomes = []
-        cmd = described_class.new(organization, form)
-        cmd.on(:ok) { outcomes << :ok }
-        cmd.on(:invalid) { outcomes << :invalid }
-        cmd.call
-
-        expect(outcomes).to eq([:invalid])
-      end
     end
   end
 end

@@ -15,13 +15,15 @@ module Decidim
       end
 
       it "updates locales and rebuilds search index" do
+        organization.update!(available_locales: %w(en ca), default_locale: "ca")
+
         expect(Rails.application).to receive(:load_tasks).ordered
         expect(rebuild_search_task).to receive(:reenable).ordered
         expect(rebuild_search_task).to receive(:invoke).ordered
 
-        form = UpdateLocaleForm.from_model(organization)
-        form.available_locales = %w(en)
-        form.default_locale = "en"
+        form = UpdateLocaleForm.from_params(
+          organization: { available_locales: { "en" => "1" }, default_locale: "en" }
+        ).with_context(current_organization: organization)
 
         outcomes = []
         cmd = described_class.new(organization, form)
@@ -29,7 +31,9 @@ module Decidim
         cmd.on(:invalid) { outcomes << :invalid }
         cmd.call
         expect(outcomes).to eq([:ok])
-        expect(organization.reload.default_locale).to eq("en")
+        organization.reload
+        expect(organization.available_locales).to eq(%w(en))
+        expect(organization.default_locale).to eq("en")
       end
 
       it "broadcasts invalid when form is invalid" do

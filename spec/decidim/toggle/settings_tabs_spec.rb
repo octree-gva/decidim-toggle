@@ -28,19 +28,19 @@ module Decidim
         expect(list.items.first.module_name).to eq(:demo_mod)
       end
 
-      it "add_tab supports an optional partial renderer" do
+      it "add_tab supports form_layout_partial" do
         SettingsTabRegistry.register(:tabs_spec) do |tabs|
           tabs.add_tab :x,
                        "X",
                        form: String,
                        command: Integer,
-                       partial: "decidim/foo",
+                       form_layout_partial: "decidim/foo/tab",
                        position: 2
         end
 
         list = described_class.new(:tabs_spec)
         list.build_for(Object.new)
-        expect(list.items.first.partial).to eq("decidim/foo")
+        expect(list.items.first.form_layout_partial).to eq("decidim/foo/tab")
         expect(list.items.first.form_tab?).to be(true)
       end
 

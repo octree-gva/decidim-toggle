@@ -1,15 +1,17 @@
 # Contributing to decidim-toggle
 
-Contributor documentation lives in the **documentation site** (Docusaurus). Structure map: [website/docs/README.md](website/docs/README.md).
+Contributor documentation: [octree.ch/decidim-toggle/contributing](https://octree.ch/decidim-toggle/contributing).
 
 ## Quick links
 
-- **Local preview:** `cd website && yarn && yarn start`
-- **Build:** `cd website && yarn build`
-- **Contribution guide:** [website/docs/developer/contribute.md](website/docs/developer/contribute.md) — published at `/contribute` on the doc site
+- **Doc site (local):** `cd website && yarn && yarn start`
+- **Doc site (build):** `cd website && yarn build`
+- **Tests and lint:** `./bin/check` — RuboCop, erblint, RSpec
+- **GitLab:** [issues](https://git.octree.ch/decidim/vocacity/decidim-modules/decidim-toggle/-/issues) · [merge requests](https://git.octree.ch/decidim/vocacity/decidim-modules/decidim-toggle/-/merge_requests)
+- **Code of conduct:** [octree.ch/decidim-toggle/code-of-conduct](https://octree.ch/decidim-toggle/code-of-conduct)
 
 ## Module developers
 
-Adding a settings tab from your `decidim-*` gem: [website/docs/integrate/quickstart.md](website/docs/integrate/quickstart.md) — not this file.
+Adding a settings tab: [integrate/quickstart](https://octree.ch/decidim-toggle/integrate/quickstart).
 
 Host install: [README.md](README.md).

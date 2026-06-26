@@ -1,9 +1,0 @@
-<% organization = local_assigns[:organization] %>
-<% tab = local_assigns[:tab] %>
-<%= decidim_toggle_settings_tab_form(organization, tab) do |tf| %>
-  <% if tab.partial.present? %>
-    <%= render partial: tab.partial, locals: { f: tf, organization: }.merge(tab.extra_locals) %>
-  <% else %>
-    <%= tf.all_fields %>
-  <% end %>
-<% end %>

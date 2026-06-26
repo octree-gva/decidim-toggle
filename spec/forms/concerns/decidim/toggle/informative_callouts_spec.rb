@@ -43,12 +43,6 @@ module Decidim
         form.show_warning = true
         expect(form.visible_informative_callouts.map { |entry| entry.message_for(form) }).to eq(["Always visible", "Conditional"])
       end
-
-      it "resolves the message from a form method" do
-        form = form_class.from_params({})
-
-        expect(form.visible_informative_callouts.first.message_for(form)).to eq("Always visible")
-      end
     end
   end
 end

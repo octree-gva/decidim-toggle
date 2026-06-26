@@ -32,11 +32,14 @@
   }
 
   .tab-x-container {
-    @apply flex flex-wrap gap-x-2 gap-y-1 list-none m-0 p-0 border-b border-gray/35;
+    @apply flex flex-nowrap gap-x-2 gap-y-1 list-none m-0 p-0 border-b border-gray/35;
+    max-width: 100%;
+    overflow-x: auto;
   }
 
   .tab-x-container > li {
     @apply m-0 p-0;
+    text-wrap: nowrap;
   }
 
   .tab-x {

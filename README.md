@@ -1,12 +1,18 @@
 # Decidim Toggle
 
-Decidim Toggle is a **settings tab registry** for Decidim modules.
+<p align="center">
+  <img src="website/static/img/logo.svg" alt="Decidim Toggle" width="120" />
+</p>
 
-**For:** developers of `decidim-*` gems who ship per-organization configuration in **System → Organizations**.  
+Decidim Toggle is a **settings tab registry** for Decidim modules. It replaces decidim-system’s flat organization edit form with tabs and gives each `decidim-*` gem one place to register org configuration.
+
+**Documentation:** [octree.ch/decidim-toggle](https://octree.ch/decidim-toggle/) — integrator guides and contributor docs.
+
+**For:** developers of `decidim-*` gems that ship per-organization settings in **System → Organizations**.  
 **Delivers:** one tab = one `Decidim::Form` + one `Decidim::Command`; JSON-backed settings without new tables.  
-**Not for:** host-only installs with no custom modules, or feature toggles outside Decidim admin.
+**Not for:** host-only installs with no custom modules.
 
-## Add a tab (module developer)
+## Add a tab
 
 1. **Form** — include `Decidim::Toggle::ModuleConfigForm`, set `module_config_name`, declare attributes.
 
@@ -25,7 +31,6 @@ end
 2. **Register** — in your engine, after `decidim_toggle.organization_settings_tabs`:
 
 ```ruby
-# lib/decidim/my_module/engine.rb
 initializer "decidim_my_module.organization_settings_tab", after: "decidim_toggle.organization_settings_tabs" do
   Decidim::Toggle.settings_tabs :organization_settings do |tabs|
     tabs.add_tab :my_module, "My module",
@@ -38,18 +43,9 @@ end
 
 3. **Read** — `Decidim::Toggle.config_for(organization, :my_module)`.
 
-Optional view: `partial:` (field body) or `form_layout_partial:` (full tab) on `add_tab` — see [quickstart](website/docs/integrate/quickstart.md#3-optional-customize-form-view).
+Optional view: `form_layout_partial:` on `add_tab` — see [Customize views](https://octree.ch/decidim-toggle/integrate/customize-views).
 
-Full walkthrough: [doc site reading order](website/docs/README.md#integrator-reading-order) (`cd website && yarn start`).
-
-## Deface overrides
-
-| Virtual path | Name | Purpose |
-|--------------|------|---------|
-| `layouts/decidim/_decidim_javascript` | `toggle_add_javascript_config_public` | Injects `window.DecidimToggle` on the participant site |
-| `layouts/decidim/admin/_header` | `toggle_add_javascript_config_admin` | Injects `window.DecidimToggle` in the admin layout |
-
-Files: `app/overrides/add_toggle_javascript_public.rb`, `app/overrides/add_toggle_javascript_admin.rb`.
+Full walkthrough: [Add a settings tab](https://octree.ch/decidim-toggle/integrate/quickstart).
 
 ## Host app install
 
@@ -65,7 +61,7 @@ rails db:migrate
 
 ## Development (this gem)
 
-Docker + `./bin/check` — see [CONTRIBUTING.md](CONTRIBUTING.md) and [Developer docs](website/docs/developer/contribute.md).
+Docker + `./bin/check` (RuboCop, erblint, RSpec) — see [CONTRIBUTING.md](CONTRIBUTING.md) and [Contribute](https://octree.ch/decidim-toggle/contributing).
 
 ## License
 

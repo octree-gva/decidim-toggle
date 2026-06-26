@@ -25,15 +25,15 @@ module Decidim
                        t("omniauth", scope:),
                        form: Decidim::Toggle::UpdateOmniauthForm,
                        command: Decidim::Toggle::UpdateOmniauthCommand,
-                       partial: "decidim/system/organizations/omniauth_settings",
-                       position: 2
+                       position: 2,
+                       form_layout_partial: "decidim_toggle/system/organizations/tabs/omniauth_tab"
 
           tabs.add_tab :emails,
                        t("emails", scope:),
                        form: Decidim::Toggle::UpdateEmailsForm,
                        command: Decidim::Toggle::UpdateEmailsCommand,
-                       partial: "decidim/system/organizations/smtp_settings",
-                       position: 3
+                       position: 3,
+                       form_layout_partial: "decidim_toggle/system/organizations/tabs/emails_tab"
 
           tabs.add_tab :language,
                        t("language", scope:),

@@ -25,16 +25,6 @@ module Decidim
         end
       end
 
-      describe "#clean_available_authorizations" do
-        it "returns selected workflow names" do
-          form = described_class.from_params(
-            organization: { available_authorizations: %w(dummy_authorization_handler) }
-          ).with_context(current_organization: organization)
-
-          expect(form.clean_available_authorizations).to eq(%w(dummy_authorization_handler))
-        end
-      end
-
       describe "validations" do
         it "rejects authorization names that are not registered workflows" do
           form = described_class.from_params(

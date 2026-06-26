@@ -11,8 +11,8 @@ module Decidim
         form = UpdateNameForm.from_params(
           organization: {
             name_en: "New org name",
-            host: organization.host,
-            secondary_hosts: ""
+            host: "newhost.example.org",
+            secondary_hosts: "alias.example.org"
           }
         ).with_context(current_organization: organization)
 
@@ -22,7 +22,10 @@ module Decidim
         cmd.on(:invalid) { outcomes << :invalid }
         cmd.call
         expect(outcomes).to eq([:ok])
-        expect(organization.reload.name["en"]).to eq("New org name")
+        organization.reload
+        expect(organization.name["en"]).to eq("New org name")
+        expect(organization.host).to eq("newhost.example.org")
+        expect(organization.secondary_hosts).to eq(["alias.example.org"])
       end
 
       it "broadcasts invalid when form is invalid" do

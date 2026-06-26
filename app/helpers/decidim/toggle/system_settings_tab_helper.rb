@@ -19,6 +19,12 @@ module Decidim
         false
       end
 
+      def decidim_toggle_update_settings_tab_organization_path(organization, tab_id:)
+        path = Decidim::Toggle::Engine.routes.url_helpers.update_settings_tab_organization_path(organization, tab_id:)
+        prefixed = path.start_with?("/decidim_toggle") ? path : "/decidim_toggle#{path}"
+        prefixed.sub(%r{\A/decidim_toggle/decidim_toggle}, "/decidim_toggle")
+      end
+
       def decidim_toggle_settings_tab_form(organization, tab, &block)
         tab_form = tab.form_class.from_model(organization)
         if (stored = flash[:decidim_toggle_invalid_settings_tab]) &&
