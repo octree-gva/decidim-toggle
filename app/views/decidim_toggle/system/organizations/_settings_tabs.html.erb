@@ -8,7 +8,7 @@
     <ul class="tab-x-container tabs-<%= tabs.items.size %>">
       <% tabs.items.each do |tab| %>
         <li>
-          <button type="button" id="trigger-toggle-<%= tab.identifier %>" class="tab-x" data-controls="panel-toggle-<%= tab.identifier %>" aria-expanded="<%= tab.open? ? "true" : "false" %>" <%= "data-open=\"true\"".html_safe if tab.open? %>>
+          <button type="button" id="trigger-toggle-<%= tab.identifier %>" class="tab-x" data-controls="panel-toggle-<%= tab.identifier %>" aria-expanded="<%= tab.open? ? "true" : "false" %>">
             <%= tab.label %>
           </button>
         </li>

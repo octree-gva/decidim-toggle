@@ -15,19 +15,23 @@ function getTriggerForPanel(container, panelId) {
 
 function getDefaultTrigger(container) {
   return (
-    container.querySelector('.tab-x[data-controls][data-open="true"]') ||
+    container.querySelector('.tab-x[data-controls][aria-expanded="true"]') ||
     container.querySelector(".tab-x[data-controls]")
   );
 }
 
-function scrollActiveTabIntoView(container, trigger, { behavior = "smooth" } = {}) {
+function scrollActiveTabIntoView(
+  container,
+  trigger,
+  { behavior = "smooth" } = {}
+) {
   const scroller = container.querySelector(".tab-x-container");
   const tabItem = trigger?.closest("li");
   if (!scroller || !tabItem) return;
 
   scroller.scrollTo({
-    left: tabItem.offsetLeft,
-    behavior,
+    left: Math.max(tabItem.offsetLeft - 64, 0),
+    behavior
   });
 }
 
@@ -38,11 +42,6 @@ function activateTab(container, trigger, { scrollBehavior = "smooth" } = {}) {
   container.querySelectorAll(".tab-x[data-controls]").forEach((button) => {
     const isActive = button === trigger;
     button.setAttribute("aria-expanded", isActive ? "true" : "false");
-    if (isActive) {
-      button.dataset.open = "true";
-    } else {
-      delete button.dataset.open;
-    }
   });
 
   container.querySelectorAll(`[id^="${PANEL_PREFIX}"]`).forEach((panel) => {
