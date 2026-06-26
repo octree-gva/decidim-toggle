@@ -8,10 +8,6 @@ Decidim Toggle is a **settings tab registry** for Decidim modules. It replaces d
 
 **Documentation:** [octree.ch/decidim-toggle](https://octree.ch/decidim-toggle/) — integrator guides and contributor docs.
 
-**For:** developers of `decidim-*` gems that ship per-organization settings in **System → Organizations**.  
-**Delivers:** one tab = one `Decidim::Form` + one `Decidim::Command`; JSON-backed settings without new tables.  
-**Not for:** host-only installs with no custom modules.
-
 ## Add a tab
 
 1. **Form** — include `Decidim::Toggle::ModuleConfigForm`, set `module_config_name`, declare attributes.
