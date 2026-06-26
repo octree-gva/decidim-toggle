@@ -7,8 +7,12 @@ module Decidim
 
       mimic :organization
 
-      info "For generated organization defaults, check the decidim space page",
+      info :space_page_defaults_callout,
            if_predicate: ->(*) { Decidim::Toggle.gem_present?("decidim-space_page") }
+
+      def space_page_defaults_callout
+        "For generated organization defaults, check the decidim space page"
+      end
 
       # This tab only updates a small JSONB slice (omniauth settings).
       # The generic system form validates presence of `host` and `users_registration_mode`,

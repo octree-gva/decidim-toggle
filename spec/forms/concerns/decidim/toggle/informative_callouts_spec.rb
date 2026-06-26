@@ -11,8 +11,16 @@ module Decidim
 
           mimic :organization
 
-          info "Always visible"
-          warning "Conditional", if_predicate: ->(form) { form.show_warning? }
+          info :always_visible_message
+          warning :conditional_message, if_predicate: ->(form) { form.show_warning? }
+
+          def always_visible_message
+            "Always visible"
+          end
+
+          def conditional_message
+            "Conditional"
+          end
 
           def show_warning?
             @show_warning
@@ -36,37 +44,10 @@ module Decidim
         expect(form.visible_informative_callouts.map { |entry| entry.message_for(form) }).to eq(["Always visible", "Conditional"])
       end
 
-      it "resolves message from a symbol or proc" do
-        dynamic_form_class = Class.new(Decidim::Form) do
-          include InformativeCallouts
+      it "resolves the message from a form method" do
+        form = form_class.from_params({})
 
-          info :symbol_message
-          warning ->(form) { "Proc #{form.flag}" }
-
-          def symbol_message
-            "From symbol"
-          end
-
-          attr_accessor :flag
-        end
-
-        form = dynamic_form_class.from_params({})
-        form.flag = "ok"
-        entries = form.visible_informative_callouts
-
-        expect(entries[0].message_for(form)).to eq("From symbol")
-        expect(entries[1].message_for(form)).to eq("Proc ok")
-      end
-
-      it "marks symbol messages ending with _html as html callouts" do
-        html_form_class = Class.new(Decidim::Form) do
-          include InformativeCallouts
-
-          info :management_callout_html
-        end
-
-        entry = html_form_class.informative_callouts.first
-        expect(entry.html?).to be(true)
+        expect(form.visible_informative_callouts.first.message_for(form)).to eq("Always visible")
       end
     end
   end

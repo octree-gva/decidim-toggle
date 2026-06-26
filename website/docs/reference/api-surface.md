@@ -72,7 +72,7 @@ See [Attributes — Expose attributes to JS](../integrate/attributes.md#expose-a
 | API | Use |
 |-----|-----|
 | `Decidim::Toggle::TabForm` | Includes `InformativeCallouts` on tab forms |
-| `Decidim::Toggle::InformativeCallouts` | `info` / `warning` / `danger` — message: `String`, `Symbol` (form method), or `Proc(form)`; see [Attributes](../integrate/attributes.md#informative-callouts-info-warning-danger) |
+| `Decidim::Toggle::InformativeCallouts` | `info` / `warning` / `danger` — message: `Symbol` (form instance method; HTML allowed); optional `if_predicate:`; see [Attributes](../integrate/attributes.md#informative-callouts-info-warning-danger) |
 | `Decidim::Toggle::SettingsFormBuilder` | `all_fields`, `fields_for_names`, `informative_callouts` — see [Attributes](../integrate/attributes.md) |
 
 ## See also

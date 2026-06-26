@@ -19,12 +19,12 @@ module Decidim
         return "".html_safe if entries.blank?
 
         callouts = entries.map do |entry|
-          @template.cell(
+          callout = @template.cell(
             "decidim/announcement",
             entry.message_for(object),
-            callout_class: CALLOUT_CLASS_BY_TYPE.fetch(entry.type),
-            html: entry.html?
+            callout_class: CALLOUT_CLASS_BY_TYPE.fetch(entry.type)
           )
+          @template.content_tag(:div, callout, class: InformativeCallouts::WRAPPER_CLASS)
         end
         safe_join(callouts)
       end

@@ -129,19 +129,31 @@ module MyModule
 
     attribute :enabled, :boolean
 
-    info "Defaults apply to new organizations only."
+    info :defaults_callout
 
     info :installed_modules_callout,
          if_predicate: ->(form) { form.missing_modules.any? }
 
-    warning ->(form) { "Disabling removes public access to #{form.module_label}." },
-             if_predicate: ->(form) { form.enabled == false }
+    warning :disable_warning_callout,
+            if_predicate: ->(form) { form.enabled == false }
 
-    danger "Requires decidim-other in the Gemfile.",
+    danger :other_gem_required_callout,
            if_predicate: ->(*) { Decidim::Toggle.gem_present?("decidim-other") }
+
+    def defaults_callout
+      "Defaults apply to new organizations only."
+    end
 
     def installed_modules_callout
       I18n.t("my_module.admin.missing_modules", missing: missing_modules.join(", "))
+    end
+
+    def disable_warning_callout
+      "Disabling removes public access to #{module_label}."
+    end
+
+    def other_gem_required_callout
+      "Requires decidim-other in the Gemfile."
     end
   end
 end
@@ -149,30 +161,20 @@ end
 
 | Macro | Style | When to use |
 |-------|-------|-------------|
-| `info "message"` | Info (blue) | Static context, pointers to other tabs |
-| `info :method_name` | Info (blue) | Dynamic copy from a form instance method |
-| `info ->(form) { ... }` | Info (blue) | Inline dynamic copy |
-| `warning "message", if_predicate:` | Warning (yellow) | Reversible caution before save |
-| `danger "message", if_predicate:` | Alert (red) | Strong caution, destructive or risky change |
+| `info :method_name` | Info (blue) | Context from a form instance method (HTML allowed) |
+| `warning :method_name, if_predicate:` | Warning (yellow) | Reversible caution before save |
+| `danger :method_name, if_predicate:` | Alert (red) | Strong caution, destructive or risky change |
 
 `if_predicate` receives the form instance; omit it to always show the callout.
 
-`message` (first argument to `info` / `warning` / `danger`) may be:
-
-| Form | Resolved at render time by `InformativeEntry#message_for` |
-|------|-----------------------------------------------------------|
-| `String` | Used as-is |
-| `Symbol` | `form.public_send(symbol)` — e.g. `info :installed_modules_callout` |
-| `Proc` | `proc.call(form)` — e.g. `info ->(form) { ... }` |
-
-Dynamic example (symbol + conditional visibility):
+The first argument is always a **Symbol** naming a method on the form. `InformativeEntry#message_for` calls `form.public_send(symbol)`.
 
 ```ruby
 info :installed_modules_callout,
      if_predicate: ->(form) { form.missing_modules.any? }
 
 def installed_modules_callout
-  I18n.t("my_module.admin.missing_modules", missing: missing_modules.join(", "))
+  I18n.t("my_module.admin.missing_modules_html", missing: missing_modules.join(", "))
 end
 ```
 

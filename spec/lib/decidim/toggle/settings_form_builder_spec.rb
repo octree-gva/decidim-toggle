@@ -31,7 +31,11 @@ module Decidim
         form_class = Class.new(UpdateSecurityForm) do
           include InformativeCallouts
 
-          info "Spec info callout"
+          info :spec_info_callout
+
+          def spec_info_callout
+            "Spec info callout"
+          end
         end
         form = form_class.from_params(organization: {})
         template = ActionView::Base.with_empty_template_cache.new(ActionView::LookupContext.new([]), {}, nil)
@@ -43,6 +47,7 @@ module Decidim
         html = builder.informative_callouts
         expect(html).to include("Spec info callout")
         expect(html).to include('class="flash flex-col info"')
+        expect(html).to include('class="decidim_toggle_informative_callout"')
       end
 
       it "renders i18n helptext under the field when present" do

@@ -65,7 +65,7 @@ module Decidim
 
         if Decidim::Toggle.gem_present?("decidim-space_page")
           expect(entries.map(&:type)).to eq([:info])
-          expect(entries.first.message).to include("decidim space page")
+          expect(entries.first.message_for(form)).to include("decidim space page")
         else
           expect(entries).to be_empty
         end
