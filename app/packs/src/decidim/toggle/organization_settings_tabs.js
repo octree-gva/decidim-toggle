@@ -20,7 +20,18 @@ function getDefaultTrigger(container) {
   );
 }
 
-function activateTab(container, trigger) {
+function scrollActiveTabIntoView(container, trigger, { behavior = "smooth" } = {}) {
+  const scroller = container.querySelector(".tab-x-container");
+  const tabItem = trigger?.closest("li");
+  if (!scroller || !tabItem) return;
+
+  scroller.scrollTo({
+    left: tabItem.offsetLeft,
+    behavior,
+  });
+}
+
+function activateTab(container, trigger, { scrollBehavior = "smooth" } = {}) {
   const panelId = trigger.dataset.controls;
   if (!panelId) return;
 
@@ -37,6 +48,8 @@ function activateTab(container, trigger) {
   container.querySelectorAll(`[id^="${PANEL_PREFIX}"]`).forEach((panel) => {
     panel.setAttribute("aria-hidden", panel.id === panelId ? "false" : "true");
   });
+
+  scrollActiveTabIntoView(container, trigger, { behavior: scrollBehavior });
 }
 
 function activateTabFromHash(container) {
@@ -73,7 +86,7 @@ function syncHash(panelId) {
 
 function initContainer(container) {
   const trigger = initialTrigger(container);
-  if (trigger) activateTab(container, trigger);
+  if (trigger) activateTab(container, trigger, { scrollBehavior: "auto" });
 
   container.addEventListener("click", (event) => {
     const button = event.target.closest(".tab-x[data-controls]");

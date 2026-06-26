@@ -1,5 +1,9 @@
 // Organization settings form + tabs (decidim-toggle).
 // Loaded only when the tabbed settings partial is rendered (decidim system).
+#aside-system ~ main {
+  max-width: calc(100% - 16.6666%);
+}
+
 #decidim-toggle-callout {
   @apply border-b-2 border-r-2;
 
@@ -35,6 +39,7 @@
     @apply flex flex-nowrap gap-x-2 gap-y-1 list-none m-0 p-0 border-b border-gray/35;
     max-width: 100%;
     overflow-x: auto;
+    scroll-behavior: smooth;
   }
 
   .tab-x-container > li {
