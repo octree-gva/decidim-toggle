@@ -47,11 +47,21 @@ describe "DecidimToggle::System::SettingsTabController" do
       expect(response).to have_http_status(:not_found)
     end
 
-    it "redirects with alert when the form is invalid" do
+    it "stores invalid tab data in flash when the form is invalid" do
       patch path, params: { organization: { users_registration_mode: "not_a_mode" } }
 
       expect(response).to redirect_to(decidim_system.edit_organization_path(organization))
-      expect(flash[:alert]).to be_present
+      expect(flash[:decidim_toggle_invalid_settings_tab]).to include(
+        organization_id: organization.id,
+        tab_id: "security"
+      )
+    end
+
+    it "re-renders field errors after redirect" do
+      patch path, params: { organization: { users_registration_mode: "not_a_mode" } }
+      follow_redirect!
+
+      expect(response.body).to include("form-error")
     end
   end
 end

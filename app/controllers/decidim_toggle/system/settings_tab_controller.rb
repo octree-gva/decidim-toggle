@@ -20,7 +20,12 @@ module DecidimToggle
           end
 
           on(:invalid) do
-            flash[:alert] = @form.errors.full_messages.join(". ")
+            flash[:decidim_toggle_invalid_settings_tab] = {
+              organization_id: @organization.id,
+              tab_id: params[:tab_id].to_s,
+              params: params.fetch(:organization, {}).permit!.to_h,
+              errors: @form.errors.messages.transform_keys(&:to_s).transform_values { |messages| messages.map(&:to_s) }
+            }
             redirect_to settings_tab_redirect_target
           end
         end
