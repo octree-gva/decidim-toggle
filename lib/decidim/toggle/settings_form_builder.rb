@@ -22,7 +22,8 @@ module Decidim
           @template.cell(
             "decidim/announcement",
             entry.message_for(object),
-            callout_class: CALLOUT_CLASS_BY_TYPE.fetch(entry.type)
+            callout_class: CALLOUT_CLASS_BY_TYPE.fetch(entry.type),
+            html: entry.html?
           )
         end
         safe_join(callouts)

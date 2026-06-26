@@ -57,6 +57,17 @@ module Decidim
         expect(entries[0].message_for(form)).to eq("From symbol")
         expect(entries[1].message_for(form)).to eq("Proc ok")
       end
+
+      it "marks symbol messages ending with _html as html callouts" do
+        html_form_class = Class.new(Decidim::Form) do
+          include InformativeCallouts
+
+          info :management_callout_html
+        end
+
+        entry = html_form_class.informative_callouts.first
+        expect(entry.html?).to be(true)
+      end
     end
   end
 end

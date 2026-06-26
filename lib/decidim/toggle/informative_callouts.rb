@@ -19,12 +19,17 @@ module Decidim
       CALLOUT_TYPES = [:info, :warning, :danger].freeze
 
       class InformativeEntry
-        attr_reader :type, :message, :if_predicate
+        attr_reader :type, :message, :if_predicate, :html
 
-        def initialize(type:, message:, if_predicate: nil)
+        def initialize(type:, message:, if_predicate: nil, html: false)
           @type = type
           @message = message
           @if_predicate = if_predicate
+          @html = html
+        end
+
+        def html?
+          html
         end
 
         def visible?(form)
@@ -47,22 +52,28 @@ module Decidim
           @informative_callouts ||= []
         end
 
-        def info(message, if_predicate: nil)
-          register_informative(:info, message, if_predicate:)
+        def info(message, if_predicate: nil, html: :auto)
+          register_informative(:info, message, if_predicate:, html: resolve_html_flag(message, html))
         end
 
-        def warning(message, if_predicate: nil)
-          register_informative(:warning, message, if_predicate:)
+        def warning(message, if_predicate: nil, html: :auto)
+          register_informative(:warning, message, if_predicate:, html: resolve_html_flag(message, html))
         end
 
-        def danger(message, if_predicate: nil)
-          register_informative(:danger, message, if_predicate:)
+        def danger(message, if_predicate: nil, html: :auto)
+          register_informative(:danger, message, if_predicate:, html: resolve_html_flag(message, html))
         end
 
         private
 
-        def register_informative(type, message, if_predicate: nil)
-          informative_callouts << InformativeEntry.new(type:, message:, if_predicate:)
+        def resolve_html_flag(message, html)
+          return message.to_s.end_with?("_html") if html == :auto && message.is_a?(Symbol)
+
+          html == :auto ? false : html
+        end
+
+        def register_informative(type, message, if_predicate: nil, html: false)
+          informative_callouts << InformativeEntry.new(type:, message:, if_predicate:, html:)
         end
       end
 
