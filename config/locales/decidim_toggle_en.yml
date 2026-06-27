@@ -1,4 +1,6 @@
 en:
+  # Field labels for ModuleConfigForm tabs live under decidim_toggle.system.<module_config_name>
+  # in each integrating gem (e.g. decidim_geo, spaces). This file holds built-in org settings UI only.
   decidim_toggle:
     system:
       organizations:

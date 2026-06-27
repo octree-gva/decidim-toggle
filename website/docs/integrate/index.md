@@ -15,9 +15,9 @@ Register a form and command in your engine after `decidim_toggle.organization_se
 
 ## 2. Define attributes and validation
 
-Declare fields on your `Decidim::Form` — booleans, collections, translatable fields.
+Declare fields on your `Decidim::Form` — booleans, collections, translatable fields. Field labels live under `decidim_toggle.system.<module_config_name>` — see [Labels](./labels.md).
 
-→ [Attributes](./attributes.md) · [Informative callouts](./informative_callout.md) (optional)
+→ [Attributes](./attributes.md) · [Labels](./labels.md) · [Informative callouts](./informative_callout.md) (optional)
 
 ## 3. Customize the form view (optional)
 

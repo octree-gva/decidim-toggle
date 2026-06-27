@@ -1,5 +1,5 @@
 ---
-sidebar_position: 5
+sidebar_position: 6
 title: Customize views
 description: form_layout_partial for custom settings tab layouts
 ---

@@ -67,19 +67,17 @@ end
 
 ## Field helptext
 
-Optional copy under a field via I18n (use `helptext`, not the attribute label key):
+Optional copy under a field — see [Labels](./labels.md).
 
 ```yaml
 # config/locales/my_module_en.yml
 en:
-  activemodel:
-    attributes:
-      organization:  # or your form model_name i18n_key
+  decidim_toggle:
+    system:
+      my_module:
         helptext:
           api_key: "Shown to server-side jobs only."
 ```
-
-Lookup: `activemodel.attributes.<model>.helptext.<attribute_name>`.
 
 ## Disabled fields
 
@@ -116,6 +114,7 @@ For info, warning, and danger banners above the fields, see [Informative callout
 ## See also
 
 - [Add a settings tab](./quickstart.md)
+- [Labels](./labels.md)
 - [Informative callouts](./informative_callout.md)
 - [Customize views](./customize-views.md)
 - [JavaScript](./javascript.md)

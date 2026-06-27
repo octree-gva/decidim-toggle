@@ -172,6 +172,11 @@ module Decidim
       def helptext_for_attribute(name)
         attribute_name = name.to_s
 
+        if object.class.respond_to?(:module_config_name)
+          helptext = ModuleConfigI18n.translate_helptext(object.class.module_config_name, attribute_name)
+          return helptext if helptext.present?
+        end
+
         # When a form `mimic`s another ActiveModel (e.g. organization), `model_name`
         # is expected to match i18n keys used across Decidim.
         candidate_model_keys = []

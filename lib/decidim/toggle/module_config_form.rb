@@ -4,6 +4,7 @@ module Decidim
   module Toggle
     # Include in a {Decidim::Form} used with +add_tab ..., module_name:+ so +from_model(organization)+
     # loads JSON from {OrganizationModuleConfig} and +UpdateModuleConfigCommand+ can persist it.
+    # Field labels resolve from +decidim_toggle.system.<module_config_name>+ (see integrate/labels.md).
     #
     #   class MyModule::AdminConfigForm < Decidim::Form
     #     include Decidim::Toggle::ModuleConfigForm
@@ -16,6 +17,10 @@ module Decidim
       extend ActiveSupport::Concern
 
       class_methods do
+        def human_attribute_name(attr, options = {})
+          ModuleConfigI18n.translate_label(module_config_name, attr) || super
+        end
+
         def from_model(organization)
           raise NotImplementedError, "#{name} must set self.module_config_name = \"...\"" if module_config_name.blank?
 
