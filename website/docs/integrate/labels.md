@@ -6,50 +6,71 @@ description: Field labels and helptext for module config tabs
 
 # Labels
 
-Forms that include `Decidim::Toggle::ModuleConfigForm` resolve **field labels** and **helptext** from a module-specific I18n scope derived from `module_config_name`.
+Forms that include `Decidim::Toggle::ModuleConfigForm` resolve **field labels**, **helptext**, and the **tab title** from `decidim_toggle.system.<module_name>`.
 
-## Label scope
+## Module name
 
-| Form setting | I18n scope |
-|--------------|------------|
-| `self.module_config_name = "decidim_geo"` | `decidim_toggle.system.decidim_geo` |
-| `self.module_config_name = "spaces"` | `decidim_toggle.system.spaces` |
+Define one constant in your module and reuse it everywhere:
 
-Example locale file in your module gem:
+```ruby
+# lib/decidim/my_module.rb
+module Decidim
+  module MyModule
+    MODULE_NAME = "my_module"
+  end
+end
+```
+
+```ruby
+# app/forms/my_module/admin_config_form.rb
+self.module_config_name = Decidim::MyModule::MODULE_NAME
+
+# lib/decidim/my_module/engine.rb
+tabs.add_tab :my_module,
+             I18n.t("decidim_toggle.system.#{Decidim::MyModule::MODULE_NAME}.tab"),
+             form: MyModule::AdminConfigForm,
+             command: Decidim::Toggle::UpdateModuleConfigCommand,
+             module_name: Decidim::MyModule::MODULE_NAME
+```
+
+`module_config_name`, `module_name:` on `add_tab`, and the locale path must all match.
+
+## Locale files
+
+Keep toggle strings in dedicated files — one per locale:
+
+```
+config/locales/decidim_toggle.en.yml
+config/locales/decidim_toggle.fr.yml
+```
 
 ```yaml
-# config/locales/my_module_en.yml
+# config/locales/decidim_toggle.en.yml
 en:
   decidim_toggle:
     system:
-      decidim_geo:
-        enabled: Enable Decidim Geo
-        search_bar: Enable search in geo drawer
+      my_module:
+        tab: My module
+        enabled: Enable my module
         helptext:
-          search_bar: Shown in the map drawer when geo is enabled.
+          enabled: Applies to this organization only.
 ```
+
+| Key | Use |
+|-----|-----|
+| `tab` | Tab button label (`I18n.t("decidim_toggle.system.<module_name>.tab")`) |
+| `<attribute>` | Field label (via `ModuleConfigForm`) |
+| `helptext.<attribute>` | Optional help copy under a field |
 
 Field labels use:
 
-`decidim_toggle.system.<module_config_name>.<attribute>`
-
-Add one key per form attribute in your module locale files.
+`decidim_toggle.system.<module_name>.<attribute>`
 
 ## Helptext
 
 Optional copy under a field uses a `helptext` sub-key in the same module scope:
 
-`decidim_toggle.system.<module_config_name>.helptext.<attribute>`
-
-## Tab title vs field labels
-
-The **tab button label** is the second argument to `add_tab` — it is not read from this scope:
-
-```ruby
-tabs.add_tab :decidim_geo, I18n.t("decidim.geo.system.tab"), ...
-```
-
-Keep tab titles in your module’s own locale tree; keep **field** labels under `decidim_toggle.system.<module_config_name>`.
+`decidim_toggle.system.<module_name>.helptext.<attribute>`
 
 ## Custom labels
 

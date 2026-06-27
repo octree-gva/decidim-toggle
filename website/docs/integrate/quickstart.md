@@ -16,7 +16,7 @@ module MyModule
   class AdminConfigForm < Decidim::Form
     include Decidim::Toggle::ModuleConfigForm
 
-    self.module_config_name = "my_module"
+    self.module_config_name = Decidim::MyModule::MODULE_NAME
 
     mimic :organization
 
@@ -34,10 +34,10 @@ In your module engine, **after** `decidim_toggle.organization_settings_tabs`:
 initializer "decidim_my_module.organization_settings_tab", after: "decidim_toggle.organization_settings_tabs" do
   Decidim::Toggle.settings_tabs :organization_settings do |tabs|
     tabs.add_tab :my_module,
-                 "My module",
+                 I18n.t("decidim_toggle.system.#{Decidim::MyModule::MODULE_NAME}.tab"),
                  form: MyModule::AdminConfigForm,
                  command: Decidim::Toggle::UpdateModuleConfigCommand,
-                 module_name: :my_module,
+                 module_name: Decidim::MyModule::MODULE_NAME,
                  position: 10
   end
 end

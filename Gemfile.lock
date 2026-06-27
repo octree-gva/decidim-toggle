@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    decidim-toggle (0.1.0)
+    decidim-toggle (0.1.1)
       decidim-core (~> 0.29)
       decidim-system (~> 0.29)
       deface (~> 1.9.0)
