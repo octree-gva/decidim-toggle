@@ -1,6 +1,6 @@
 # Contributing to decidim-toggle
 
-Contributor documentation: [octree.ch/decidim-toggle/contributing](https://octree.ch/decidim-toggle/contributing).
+Contributor documentation: [octree-gva.github.io/decidim-toggle/contributing](https://octree-gva.github.io/decidim-toggle/contributing).
 
 ## Quick links
 
@@ -8,10 +8,10 @@ Contributor documentation: [octree.ch/decidim-toggle/contributing](https://octre
 - **Doc site (build):** `cd website && yarn build`
 - **Tests and lint:** `./bin/check` — RuboCop, erblint, RSpec
 - **GitLab:** [issues](https://git.octree.ch/decidim/vocacity/decidim-modules/decidim-toggle/-/issues) · [merge requests](https://git.octree.ch/decidim/vocacity/decidim-modules/decidim-toggle/-/merge_requests)
-- **Code of conduct:** [octree.ch/decidim-toggle/code-of-conduct](https://octree.ch/decidim-toggle/code-of-conduct)
+- **Code of conduct:** [octree-gva.github.io/decidim-toggle/code-of-conduct](https://octree-gva.github.io/decidim-toggle/code-of-conduct)
 
 ## Module developers
 
-Adding a settings tab: [integrate/quickstart](https://octree.ch/decidim-toggle/integrate/quickstart).
+Adding a settings tab: [integrate/quickstart](https://octree-gva.github.io/decidim-toggle/integrate/quickstart).
 
 Host install: [README.md](README.md).

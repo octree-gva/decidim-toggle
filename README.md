@@ -6,7 +6,7 @@
 
 Decidim Toggle is a **settings tab registry** for Decidim modules. It replaces decidim-system’s flat organization edit form with tabs and gives each `decidim-*` gem one place to register org configuration.
 
-**Documentation:** [octree.ch/decidim-toggle](https://octree.ch/decidim-toggle/) — integrator guides and contributor docs.
+**Documentation:** [octree-gva.github.io/decidim-toggle](https://octree-gva.github.io/decidim-toggle/) — integrator guides and contributor docs.
 
 ## Add a tab
 
@@ -39,9 +39,9 @@ end
 
 3. **Read** — `Decidim::Toggle.config_for(organization, :my_module)`.
 
-Optional view: `form_layout_partial:` on `add_tab` — see [Customize views](https://octree.ch/decidim-toggle/integrate/customize-views).
+Optional view: `form_layout_partial:` on `add_tab` — see [Customize views](https://octree-gva.github.io/decidim-toggle/integrate/customize-views).
 
-Full walkthrough: [Add a settings tab](https://octree.ch/decidim-toggle/integrate/quickstart).
+Full walkthrough: [Add a settings tab](https://octree-gva.github.io/decidim-toggle/integrate/quickstart).
 
 ## Host app install
 
@@ -57,7 +57,7 @@ rails db:migrate
 
 ## Development (this gem)
 
-Docker + `./bin/check` (RuboCop, erblint, RSpec) — see [CONTRIBUTING.md](CONTRIBUTING.md) and [Contribute](https://octree.ch/decidim-toggle/contributing).
+Docker + `./bin/check` (RuboCop, erblint, RSpec) — see [CONTRIBUTING.md](CONTRIBUTING.md) and [Contribute](https://octree-gva.github.io/decidim-toggle/contributing).
 
 ## License
 

@@ -6,7 +6,7 @@ description: Edit and build the Docusaurus site
 
 # Documentation website
 
-[Docusaurus 3](https://docusaurus.io/) site with docs at the site root (`routeBasePath: /`). Published at [octree.ch/decidim-toggle](https://octree.ch/decidim-toggle/).
+[Docusaurus 3](https://docusaurus.io/) site with docs at the site root (`routeBasePath: /`). Published at [octree-gva.github.io/decidim-toggle](https://octree-gva.github.io/decidim-toggle/).
 
 ## Site layout
 
