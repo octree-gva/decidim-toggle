@@ -4,11 +4,25 @@
   <img src="website/static/img/logo.svg" alt="Decidim Toggle" width="120" />
 </p>
 
-Decidim Toggle is a **settings tab registry** for Decidim modules. It replaces decidim-system’s flat organization edit form with tabs and gives each `decidim-*` gem one place to register org configuration.
+[![pipeline status](https://git.octree.ch/decidim/vocacity/decidim-modules/decidim-toggle/badges/main/pipeline.svg)](https://git.octree.ch/decidim/vocacity/decidim-modules/decidim-toggle/-/commits/main)
+[![License: AGPL-3.0](https://img.shields.io/badge/License-AGPL--3.0-blue.svg)](LICENSE.md)
+[![Docs](https://img.shields.io/badge/docs-octree--gva.github.io-informational)](https://octree-gva.github.io/decidim-toggle/)
 
-**Documentation:** [octree-gva.github.io/decidim-toggle](https://octree-gva.github.io/decidim-toggle/) — integrator guides and contributor docs.
+Register organization settings tabs for Decidim modules—one form, one command, one read API per gem.
 
-## Add a tab
+## Contents
+
+- [Quick start](#quick-start)
+- [Host app install](#host-app-install)
+- [Documentation](#documentation)
+- [Development](#development-this-gem)
+- [Support](#support)
+- [Contributing](#contributing)
+- [License](#license)
+
+## Quick start
+
+Add a settings tab in three steps:
 
 1. **Form** — include `Decidim::Toggle::ModuleConfigForm`, set `module_config_name`, declare attributes.
 
@@ -39,7 +53,7 @@ end
 
 3. **Read** — `Decidim::Toggle.config_for(organization, :my_module)`.
 
-Optional view: `form_layout_partial:` on `add_tab` — see [Customize views](https://octree-gva.github.io/decidim-toggle/integrate/customize-views).
+Optional view partial: `form_layout_partial:` on `add_tab` — see [Customize views](https://octree-gva.github.io/decidim-toggle/integrate/customize-views).
 
 Full walkthrough: [Add a settings tab](https://octree-gva.github.io/decidim-toggle/integrate/quickstart).
 
@@ -55,10 +69,22 @@ rails decidim_toggle:install:migrations
 rails db:migrate
 ```
 
+## Documentation
+
+[octree-gva.github.io/decidim-toggle](https://octree-gva.github.io/decidim-toggle/) — integrator guides (registration, views, storage) and contributor docs.
+
 ## Development (this gem)
 
 Docker + `./bin/check` (RuboCop, erblint, RSpec) — see [CONTRIBUTING.md](CONTRIBUTING.md) and [Contribute](https://octree-gva.github.io/decidim-toggle/contributing).
 
+## Support
+
+[GitLab issues](https://git.octree.ch/decidim/vocacity/decidim-modules/decidim-toggle/-/issues) for bugs and integration questions.
+
+## Contributing
+
+Pull requests welcome. Read [CONTRIBUTING.md](CONTRIBUTING.md) before opening a merge request.
+
 ## License
 
-AGPL-3.0.
+[AGPL-3.0](LICENSE.md).

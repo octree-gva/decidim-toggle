@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
   s.authors = ["hadrien@octree.ch"]
   s.email = ["hadrien@octree.ch"]
   s.license = "AGPL-3.0"
-  s.homepage = "https://github.com/example/decidim-toggle"
+  s.homepage = "https://octree-gva.github.io/decidim-toggle"
   s.required_ruby_version = ">= 3.2"
   s.name = "decidim-toggle"
   s.summary = "Feature toggle for Decidim system administration"
