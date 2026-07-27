@@ -99,15 +99,17 @@ function syncDisableCondition(field) {
 }
 
 function initDisableConditions(container) {
-  container.querySelectorAll("[data-disabled-if-unchecked]").forEach((field) => {
-    const controllerId = field.dataset.disabledIfUnchecked;
-    const controller = document.getElementById(controllerId);
-    if (!controller) return;
+  container
+    .querySelectorAll("[data-disabled-if-unchecked]")
+    .forEach((field) => {
+      const controllerId = field.dataset.disabledIfUnchecked;
+      const controller = document.getElementById(controllerId);
+      if (!controller) return;
 
-    const sync = () => syncDisableCondition(field);
-    controller.addEventListener("change", sync);
-    sync();
-  });
+      const sync = () => syncDisableCondition(field);
+      controller.addEventListener("change", sync);
+      sync();
+    });
 }
 
 function initContainer(container) {
