@@ -3,12 +3,16 @@
 module Decidim
   module Toggle
     class UpdateLocaleForm < Decidim::Form
+      include FieldConditions
+
       mimic :organization
 
       attribute :available_locales, Array
       attribute :default_locale, String
       attribute :enable_machine_translations, Boolean
       attribute :machine_translation_display_priority, String
+
+      disable :machine_translation_display_priority, if_unchecked: :enable_machine_translations
 
       # Decidim::Form delegates :available_locales to current_organization; this form is often
       # built without context (e.g. system settings tabs), so prefer the attribute value.

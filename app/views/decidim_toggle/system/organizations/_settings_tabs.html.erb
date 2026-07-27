@@ -16,7 +16,7 @@
     </ul>
 
     <% tabs.items.each do |tab| %>
-      <div id="panel-toggle-<%= tab.identifier %>" class="border-2 rounded border-background p-4 form__wrapper mt-8" aria-hidden="<%= tab.open? ? "false" : "true" %>">
+      <div id="panel-toggle-<%= tab.identifier %>" class="border-2 rounded border-background py-4 px-0 form__wrapper mt-8" aria-hidden="<%= tab.open? ? "false" : "true" %>">
         <% if tab.form_layout_partial.present? %>
           <%= render tab.form_layout_partial, tab:, organization: %>
         <% else %>

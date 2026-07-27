@@ -3,7 +3,6 @@
 <%= decidim_toggle_settings_tab_form(organization, tab) do |tf| %>
   <fieldset>
     <legend class="form-legend"><%= t("decidim_toggle.system.organizations.security_tab.access_legend") %></legend>
-
     <p>
       <%= tf.check_box :force_users_to_authenticate_before_access_organization %>
     </p>

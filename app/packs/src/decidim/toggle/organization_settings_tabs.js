@@ -1,6 +1,7 @@
 /**
  * Self-contained settings tabs (no Decidim accordion).
  * Keeps tab selection in the URL hash (#panel-toggle-<id>) so it survives save redirects.
+ * Also syncs disable-if-unchecked field conditions declared on tab forms.
  */
 const CONTAINER_SELECTOR = ".js-decidim-toggle-settings-tabs";
 const PANEL_PREFIX = "panel-toggle-";
@@ -83,9 +84,37 @@ function syncHash(panelId) {
   window.history.replaceState(null, "", url);
 }
 
+function syncDisableCondition(field) {
+  const controllerId = field.dataset.disabledIfUnchecked;
+  if (!controllerId) return;
+
+  const controller = document.getElementById(controllerId);
+  if (!controller) return;
+
+  const disabled = !controller.checked;
+  field.classList.toggle("is-disabled", disabled);
+  field.querySelectorAll("input, select, textarea, button").forEach((el) => {
+    el.disabled = disabled;
+  });
+}
+
+function initDisableConditions(container) {
+  container.querySelectorAll("[data-disabled-if-unchecked]").forEach((field) => {
+    const controllerId = field.dataset.disabledIfUnchecked;
+    const controller = document.getElementById(controllerId);
+    if (!controller) return;
+
+    const sync = () => syncDisableCondition(field);
+    controller.addEventListener("change", sync);
+    sync();
+  });
+}
+
 function initContainer(container) {
   const trigger = initialTrigger(container);
   if (trigger) activateTab(container, trigger, { scrollBehavior: "auto" });
+
+  initDisableConditions(container);
 
   container.addEventListener("click", (event) => {
     const button = event.target.closest(".tab-x[data-controls]");

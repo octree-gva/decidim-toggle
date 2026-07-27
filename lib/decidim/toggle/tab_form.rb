@@ -14,6 +14,7 @@ module Decidim
 
       included do
         include InformativeCallouts
+        include FieldConditions
       end
     end
   end

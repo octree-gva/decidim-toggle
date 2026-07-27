@@ -4,6 +4,8 @@ module Decidim
   module Toggle
     # Form builder for add_tab form tabs. Renders all form attributes via #all_fields.
     # Form classes can define class method collection_for_<attribute> to return [[value, label], ...] for collection inputs.
+    # Use select_for_<attribute> for a dropdown, cols_for_<attribute> for text areas,
+    # and FieldConditions#disable for "disabled when unchecked" rules.
     # Loaded from the engine after +require "decidim/core"+ so +Decidim::FormBuilder+ autoload works.
     class SettingsFormBuilder < Decidim::FormBuilder
       CALLOUT_CLASS_BY_TYPE = {
@@ -11,6 +13,8 @@ module Decidim
         warning: "warning",
         danger: "alert"
       }.freeze
+
+      OPTION_LABEL_CLASS = "form__wrapper-checkbox-label"
 
       def informative_callouts
         return "".html_safe unless object.class.include?(InformativeCallouts)
@@ -31,7 +35,7 @@ module Decidim
 
       def all_fields
         fields = attribute_names.map do |name|
-          @template.content_tag(:div, input_field(name), class: field_wrapper_classes(name))
+          field_wrapper(name, input_field(name))
         end
         safe_join(fields)
       end
@@ -42,12 +46,21 @@ module Decidim
         fields = names.filter_map do |name|
           next unless object.class.respond_to?(:attribute_types) && object.class.attribute_types.has_key?(name)
 
-          @template.content_tag(:div, input_field(name.to_sym), class: field_wrapper_classes(name))
+          field_wrapper(name, input_field(name.to_sym))
         end
         safe_join(fields)
       end
 
       private
+
+      def field_wrapper(name, content)
+        @template.content_tag(
+          :div,
+          content,
+          class: field_wrapper_classes(name),
+          data: field_wrapper_data(name)
+        )
+      end
 
       def input_field(name)
         name = name.to_sym
@@ -61,8 +74,7 @@ module Decidim
         helptext = helptext_for_attribute(name)
         return input_html if helptext.blank?
 
-        # Render the help text under the field label (the upstream `Decidim::FormBuilder`
-        # typically renders the label inside the field HTML returned above).
+        # Help text sits under the control (no negative translate — that overlapped selects).
         @template.safe_join(
           [
             input_html,
@@ -72,27 +84,49 @@ module Decidim
       end
 
       def build_input_field(name)
-        type = attribute_type(name)
+        options = field_html_options_for(name)
+
+        if (select_collection = select_collection_for(name))
+          return select(
+            name,
+            select_collection.map { |(value, label)| [label, value] },
+            {},
+            options
+          )
+        end
 
         if (collection = collection_for(name))
+          type = attribute_type(name)
           if type == :array
-            collection_check_boxes(name, collection, :first, :last) do |b|
-              @template.content_tag(:div, b.check_box(checked: Array(object.public_send(name)).include?(b.value)) + b.label { b.text })
+            return collection_check_boxes(name, collection, :first, :last, {}, {}) do |b|
+              @template.content_tag(
+                :div,
+                b.label(for: nil, class: OPTION_LABEL_CLASS) { b.check_box(id: nil) + b.text },
+                class: "checkbox-field"
+              )
             end
+          end
+
+          return collection_radio_buttons(name, collection, :first, :last, {}, {}) do |b|
+            @template.content_tag(
+              :div,
+              b.label(for: nil, class: OPTION_LABEL_CLASS) { b.radio_button(id: nil) + b.text },
+              class: "radio-field"
+            )
+          end
+        end
+
+        type = attribute_type(name)
+        case type
+        when :string
+          if textarea?(name)
+            text_area(name, options.merge(textarea_html_options_for(name)))
           else
-            collection_radio_buttons(name, collection, :first, :last) do |b|
-              @template.content_tag(:div, b.radio_button + b.label { b.text })
-            end
+            text_field(name, options)
           end
-        else
-          options = field_html_options_for(name)
-          case type
-          when :string
-            name.to_s == "secondary_hosts" ? text_area(name, options) : text_field(name, options)
-          when :integer then number_field(name, options)
-          when :boolean then check_box(name, options)
-          else text_field(name, options)
-          end
+        when :integer then number_field(name, options)
+        when :boolean then check_box(name, options)
+        else text_field(name, options)
         end
       end
 
@@ -101,7 +135,31 @@ module Decidim
       end
 
       def field_wrapper_classes(name)
-        attribute_disabled?(name) ? "field is-disabled" : "field"
+        classes = ["field"]
+        classes << collection_field_modifier(name)
+        classes << "is-disabled" if attribute_disabled?(name)
+        classes.compact.join(" ")
+      end
+
+      # Modifiers for collection checkboxes/radios belong on the wrapper, not inputs
+      # (Rails collection_* html_options attach to each input).
+      def collection_field_modifier(name)
+        return nil if select_collection_for(name)
+        return nil unless collection_for(name)
+
+        attribute_type(name) == :array ? "field--checkboxes" : "field--radios"
+      end
+
+      def field_wrapper_data(name)
+        condition = disable_condition_for(name)
+        return {} if condition.blank?
+
+        controller = condition[:if_unchecked]
+        { disabled_if_unchecked: "#{sanitized_object_name}_#{controller}" }
+      end
+
+      def sanitized_object_name
+        object_name.to_s.gsub(/[\[\]]+/, "_").gsub(/_+\z/, "")
       end
 
       def attribute_disabled?(name)
@@ -111,12 +169,46 @@ module Decidim
 
         return object.attribute_disabled?(name) if object.respond_to?(:attribute_disabled?)
 
-        false
+        condition_disabled?(name)
+      end
+
+      def condition_disabled?(name)
+        condition = disable_condition_for(name)
+        return false if condition.blank?
+
+        controller = condition[:if_unchecked]
+        return false unless object.respond_to?(controller)
+
+        !ActiveModel::Type::Boolean.new.cast(object.public_send(controller))
+      end
+
+      def disable_condition_for(name)
+        return nil unless object.class.respond_to?(:field_disable_conditions)
+
+        object.class.field_disable_conditions[name.to_sym]
       end
 
       def collection_for(attribute)
         method = :"collection_for_#{attribute}"
         object.class.respond_to?(method) ? object.class.public_send(method) : nil
+      end
+
+      def select_collection_for(attribute)
+        method = :"select_for_#{attribute}"
+        object.class.respond_to?(method) ? object.class.public_send(method) : nil
+      end
+
+      def textarea?(name)
+        return true if name.to_s == "secondary_hosts"
+
+        object.class.respond_to?(:"cols_for_#{name}")
+      end
+
+      def textarea_html_options_for(name)
+        cols_method = :"cols_for_#{name}"
+        return {} unless object.class.respond_to?(cols_method)
+
+        { cols: object.class.public_send(cols_method) }
       end
 
       def attribute_names

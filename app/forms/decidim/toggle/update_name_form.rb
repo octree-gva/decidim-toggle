@@ -13,6 +13,10 @@ module Decidim
       attribute :host, String
       attribute :secondary_hosts, String
 
+      def self.cols_for_secondary_hosts
+        55
+      end
+
       validates :host, presence: true
       validate :validate_name_presence
 

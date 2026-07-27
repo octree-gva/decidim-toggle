@@ -4,7 +4,7 @@
   <% tab_form = tf.object %>
   <fieldset>
     <legend class="form-legend"><%= t("decidim_toggle.system.organizations.language_tab.legend") %></legend>
-    <table class="table-fields">
+    <table class="table-fields table table-bordered max-w-[1/2]">
       <thead>
         <tr>
           <th><%= t("decidim_toggle.system.organizations.language_tab.locale") %></th>
@@ -27,9 +27,7 @@
     <legend class="form-legend"><%= t("decidim_toggle.system.organizations.language_tab.machine_translations_legend") %></legend>
     <%= tf.fields_for_names(:enable_machine_translations) %>
 
-    <p>
-      <label class="form-legend" for="organization[machine_translation_display_priority]"><%= t("decidim_toggle.system.organizations.language_tab.machine_translation_display_priority_hint") %></label>
-      <%= tf.fields_for_names(:machine_translation_display_priority) %>
-    </p>
+    <label class="form-legend" for="organization[machine_translation_display_priority]"><%= t("decidim_toggle.system.organizations.language_tab.machine_translation_display_priority_hint") %></label>
+    <%= tf.fields_for_names(:machine_translation_display_priority) %>
   </fieldset>
 <% end %>

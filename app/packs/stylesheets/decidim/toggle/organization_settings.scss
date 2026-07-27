@@ -28,7 +28,7 @@
   }
 
   .field-helptext {
-    @apply text-xs font-normal text-gray m-0 -translate-y-[7px];
+    @apply text-xs font-normal text-gray mt-1 mb-2;
   }
 
   .form__wrapper-block {
@@ -78,6 +78,14 @@
     @apply mb-3 !important;
   }
 
+  .form__wrapper .field.field--radios {
+    @apply mt-2;
+  }
+
+  .form__wrapper .radio-field {
+    @apply mt-1;
+  }
+
   .form__wrapper .field:last-child {
     @apply mb-0;
   }
@@ -85,14 +93,20 @@
   .form__wrapper .field.is-disabled {
     @apply cursor-not-allowed;
     label,
-    input {
-      opacity: 0.33;
+    input,
+    select,
+    textarea {
+      opacity: 0.6;
       @apply cursor-not-allowed;
     }
   }
 
+  // Align fieldsets with sibling .field rows (no extra inline offset).
   fieldset {
-    @apply border-0 rounded-none m-0 mb-2 px-2 pt-2 pb-1;
+    @apply border-0 rounded-none m-0 mb-2 p-0 pt-2 pb-1;
+    margin-inline: 0;
+    min-width: 0;
+    padding-inline: 0;
   }
 
   fieldset:last-of-type {
@@ -109,13 +123,39 @@
     @apply text-sm font-normal p-0 normal-case;
   }
 
-  input {
-    @apply my-1.5 py-0.5 px-2;
+  label.form__wrapper-checkbox-label {
+    @apply inline-flex items-center gap-2 text-sm font-normal text-gray-2 cursor-pointer;
+  }
+
+  // Shared label→control spacing for text, number, select, textarea.
+  input[type="date"],
+  input[type="datetime-local"],
+  input[type="email"],
+  input[type="month"],
+  input[type="number"],
+  input[type="password"],
+  input[type="search"],
+  input[type="tel"],
+  input[type="text"],
+  input[type="time"],
+  input[type="url"],
+  input[type="week"],
+  select,
+  textarea {
+    @apply mt-1.5 mb-1.5 py-0.5 px-2 w-full max-w-[55rem] block !important;
+  }
+
+  select {
+    @apply w-auto min-w-[12rem] max-w-[55rem] pr-8 !important;
+  }
+
+  textarea {
+    @apply w-auto max-w-[55rem] !important;
   }
 
   input[type="checkbox"],
   input[type="radio"] {
-    @apply my-1.5 mr-2 py-0.5 px-2;
+    @apply my-0 mr-2 py-0 px-0 w-auto inline-block !important;
   }
 
   .table-fields {
