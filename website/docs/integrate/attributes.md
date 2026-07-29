@@ -15,6 +15,7 @@ Declare attributes on your `Decidim::Form`. `Decidim::Toggle::SettingsFormBuilde
 ```ruby
 module MyModule
   class AdminConfigForm < Decidim::Form
+    include Decidim::Toggle::TabForm
     include Decidim::Toggle::ModuleConfigForm
 
     self.module_config_name = "my_module"
@@ -24,10 +25,21 @@ module MyModule
     attribute :api_key, :string
     attribute :max_items, :integer
     attribute :mode, :string
+    attribute :notes, :string
     attribute :tags, [String]
 
-    def self.collection_for_mode
+    disable :api_key, if_unchecked: :enabled
+
+    def self.select_for_mode
       [%w[live Live], %w[draft Draft]]
+    end
+
+    def self.cols_for_notes
+      55
+    end
+
+    def self.collection_for_tags
+      [%w[a Alpha], %w[b Beta]]
     end
   end
 end
@@ -38,11 +50,14 @@ end
 | Declaration | Widget | Notes |
 |-------------|--------|-------|
 | `attribute :x, :boolean` | Checkbox | |
-| `attribute :x, :string` | Text field | `secondary_hosts` renders as textarea |
+| `attribute :x, :string` | Text field | Max width `55rem` in the settings UI |
 | `attribute :x, :integer` | Number field | |
+| `cols_for_x` | Text area | Declaring cols opts the string attribute into a textarea |
+| `secondary_hosts` (string) | Text area | Built-in exception; use `cols_for_secondary_hosts` for width |
 | Other scalar types | Text field | Fallback when no collection |
 | `attribute :x, [String]` + `collection_for_x` | Check boxes | Multi-select |
 | Scalar + `collection_for_x` | Radio buttons | Single choice |
+| Scalar + `select_for_x` | Dropdown (`<select>`) | Prefer over `collection_for_x` when both exist |
 | `translatable_attribute :x, String` | Translated field | Requires `Decidim::TranslatableAttributes`; locale keys hidden from `all_fields` |
 | `translatable_attribute :x, Decidim::Attributes::RichText` | Translated editor | Rich text per locale |
 
@@ -65,6 +80,26 @@ end
 - **Scalar attribute** → radio buttons  
 - **Array attribute** (`[String]`, etc.) → check boxes  
 
+### Dropdowns
+
+Use `select_for_<attribute_name>` (same `[[value, label], ...]` shape) for a compact `<select>`:
+
+```ruby
+def self.select_for_mode
+  [%w[live Live], %w[draft Draft]]
+end
+```
+
+## Text areas
+
+Declare `cols_for_<attribute>` to render a string attribute as a textarea:
+
+```ruby
+def self.cols_for_notes
+  55
+end
+```
+
 ## Field helptext
 
 Optional copy under a field — see [Labels](./labels.md).
@@ -84,7 +119,21 @@ en:
 Disable a field in the default builder by implementing either:
 
 - `#attribute_disabled?(attribute)` on the form instance, or
-- `#disabled_for_<attribute>?` per attribute
+- `#disabled_for_<attribute>?` per attribute, or
+- `disable :field, if_unchecked: :boolean_attr` (via `TabForm` / `FieldConditions`)
+
+### Disable when a checkbox is unchecked
+
+```ruby
+include Decidim::Toggle::TabForm # or FieldConditions
+
+attribute :enabled, :boolean
+attribute :api_key, :string
+
+disable :api_key, if_unchecked: :enabled
+```
+
+That is enough: the builder marks the field disabled on render, and the settings-tab JS toggles it live when the checkbox changes.
 
 ```ruby
 def attribute_disabled?(attribute)

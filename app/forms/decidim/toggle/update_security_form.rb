@@ -42,7 +42,7 @@ module Decidim
         super(params, additional_params)
       end
 
-      def self.collection_for_users_registration_mode
+      def self.select_for_users_registration_mode
         Decidim::Organization.users_registration_modes.map do |mode|
           [mode.first, I18n.t("decidim.system.organizations.users_registration_mode.#{mode.first}", default: mode.first)]
         end
