@@ -50,23 +50,7 @@ module Decidim
       end
 
       it "broadcasts invalid when saving fails" do
-        errors = double("errors", full_messages: [])
-        invalid_record_class = Class.new do
-          def initialize(record_errors)
-            @errors = record_errors
-          end
-
-          def errors
-            @errors
-          end
-
-          def self.i18n_scope
-            "fake_scope"
-          end
-        end
-
-        invalid_record = invalid_record_class.new(errors)
-        allow(organization).to receive(:save!).and_raise(ActiveRecord::RecordInvalid.new(invalid_record))
+        allow(organization).to receive(:save!).and_raise(ActiveRecord::RecordInvalid.new(create(:organization)))
 
         form = instance_double(UpdateEmailsForm, invalid?: false, encrypted_smtp_settings: { "host" => "smtp.example" })
 

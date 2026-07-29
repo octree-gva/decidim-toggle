@@ -69,7 +69,7 @@ rails db:migrate
 
 ## Compatibility
 
-Tested on Decidim **0.29**. Works on **0.31** as well (same System organization surface and Form/Command contract).
+Supports Decidim **>= 0.29, < 0.33**.
 
 ## See also
 

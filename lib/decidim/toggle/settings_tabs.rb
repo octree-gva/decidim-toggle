@@ -12,11 +12,11 @@ module Decidim
         @removed_items = []
       end
 
-      def build_for(context, **options)
+      def build_for(context, **)
         raise "Settings tabs #{@name} is not registered" if registry.blank?
 
         registry.configurations.each do |configuration|
-          context.instance_exec(self, **options, &configuration)
+          context.instance_exec(self, **, &configuration)
         end
         registry.mark_configurations_applied!
       end
@@ -26,10 +26,9 @@ module Decidim
       # @param label [String] Tab button label
       # @param form [Class] Decidim::Form subclass (must respond to .from_model(organization))
       # @param command [Class] Decidim::Command that receives (organization, form)
-      # @param options [Hash] :position, :if, :open,
+      # @param options [Hash] :position, :if, :open, :module_name,
       #                        :form_layout_partial (optional full tab layout partial)
-      def add_tab(identifier, label, form:, **options)
-        command = options.fetch(:command)
+      def add_tab(identifier, label, form:, command:, **options)
         options = { position: (1 + @items.length) }.merge(options)
 
         module_name = options[:module_name]

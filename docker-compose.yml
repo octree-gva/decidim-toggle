@@ -1,7 +1,7 @@
 services:
   toggle:
     command: bash -c "sleep infinity"
-    image: octree/decidim-dev:0.29
+    image: octree/decidim-dev:0.32
     entrypoint: ""
     working_dir: /home/module
     volumes:
@@ -10,8 +10,8 @@ services:
       - node_modules:/home/decidim/node_modules
     environment:
       - PORT=3000
-      - DATABASE_URL=postgresql://decidim:pleaseChangeMe@toggle_db:5432/decidim
-      - DATABASE_HOST=toggle_db
+      - DATABASE_URL=postgresql://decidim:pleaseChangeMe@toggledb:5432/decidim
+      - DATABASE_HOST=toggledb
       - DATABASE_USERNAME=decidim
       - DATABASE_PASSWORD=pleaseChangeMe
       - DEV_MODULE=decidim-toggle
@@ -20,13 +20,12 @@ services:
       - DECIDIM_FORCE_SSL=false
       - RAILS_FORCE_SSL=false
     depends_on:
-      - toggle_db
+      toggledb:
+        condition: service_healthy
     ports:
       - 3000:3000
-    links:
-      - toggle_db
 
-  toggle_db:
+  toggledb:
     image: postgres:17
     volumes:
       - toggle-pg-data:/var/lib/postgresql/data
@@ -34,6 +33,11 @@ services:
       - POSTGRES_DATABASE=decidim
       - POSTGRES_USER=decidim
       - POSTGRES_PASSWORD=pleaseChangeMe
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U decidim"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
 volumes:
   node_modules: {}

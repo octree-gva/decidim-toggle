@@ -29,7 +29,7 @@ cd website && yarn build
 
 | Check | Command |
 |-------|---------|
-| All | `./bin/check` (RuboCop, erblint, RSpec) |
+| All | `./bin/check` (RuboCop, erb_lint, RSpec) |
 | RSpec | `unset DATABASE_URL && RAILS_ENV=test bundle exec rspec` |
 | Docs | `cd website && yarn build` |
 

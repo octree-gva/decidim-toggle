@@ -4,7 +4,7 @@
   "version": "0.1.3",
   "description": "Decidim system settings tabbed UI",
   "devDependencies": {
-    "@decidim/prettier-config": "0.29",
+    "@decidim/prettier-config": "0.32",
     "prettier": "^2.3.2"
   },
   "scripts": {

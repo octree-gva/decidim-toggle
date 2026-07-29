@@ -45,13 +45,13 @@ module Decidim
           params = params.dup
           params[:organization] = (params[:organization] || {}).merge(name: name_hash)
         end
-        super(params, additional_params)
+        super
       end
 
       def clean_secondary_hosts
         return [] if secondary_hosts.blank?
 
-        secondary_hosts.split("\n").map(&:chomp).select(&:present?)
+        secondary_hosts.split("\n").map(&:chomp).compact_blank
       end
 
       private

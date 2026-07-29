@@ -16,11 +16,11 @@ module Decidim
 
       it "builds omniauth encrypted settings from params[:organization]" do
         provider = Decidim::OmniauthProvider.available.keys.first
-        omniauth_secrets = Rails.application.secrets.dig(:omniauth, provider) || {}
+        omniauth_settings = Decidim.omniauth_providers[provider] || {}
 
         # Pick the first setting other than :enabled. For `developer` this is typically :icon.
-        setting_key = (omniauth_secrets.keys.map(&:to_sym) - [:enabled]).first
-        skip "No omniauth provider settings found in secrets" if provider.blank? || setting_key.blank?
+        setting_key = (omniauth_settings.keys.map(&:to_sym) - [:enabled]).first
+        skip "No omniauth provider settings found" if provider.blank? || setting_key.blank?
 
         params = {
           organization: {

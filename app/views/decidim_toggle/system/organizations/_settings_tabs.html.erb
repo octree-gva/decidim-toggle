@@ -1,7 +1,7 @@
+<%# locals: (organization:) %>
 <% if encryption_configured? %>
   <%= append_stylesheet_pack_tag "decidim_toggle", media: "all" %>
   <%= append_javascript_pack_tag "decidim_toggle" %>
-  <% organization = local_assigns[:organization] %>
   <% tabs = Decidim::Toggle::SettingsTabs.new(:organization_settings) %>
   <% tabs.build_for(self) %>
   <div class="js-decidim-toggle-settings-tabs" id="decidim-toggle-settings-tabs">
