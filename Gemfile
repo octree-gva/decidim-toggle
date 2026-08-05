@@ -6,11 +6,11 @@ ruby "3.4.7"
 
 base_path = ""
 base_path = "../" if File.basename(__dir__) == "development_app"
+base_path = "../../" if File.basename(__dir__) == "decidim_dummy_app"
 require_relative "#{base_path}lib/decidim/toggle/version"
 
-# Development / CI / RSpec run against Decidim 0.32.
 # The gem itself accepts Decidim::Toggle.decidim_version (>= 0.29, < 0.33).
-DECIDIM_VERSION = "~> 0.32.0"
+DECIDIM_VERSION = "~> 0.32"
 
 gem "bootsnap", "~> 1.23"
 gem "decidim", DECIDIM_VERSION

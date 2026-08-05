@@ -15,24 +15,24 @@ def seed_db(path)
   end
 end
 
-# Dummy app generator ships initiatives signature stubs; main `decidim` gem no longer
-# includes decidim-initiatives, so those files break eager load unless removed.
-def strip_optional_initiatives_stubs!(app_path)
-  relative = [
-    "app/services/dummy_signature_handler.rb",
-    "app/services/dummy_sms_mobile_phone_validator.rb",
-    "config/initializers/decidim_initiatives.rb",
-    "app/views/decidim/initiatives"
-  ]
-  relative.each do |rel|
-    path = File.join(app_path, rel)
-    FileUtils.rm_rf(path)
-  end
-end
-
 desc "Generates a dummy app for testing"
-task test_app: "decidim:generate_external_test_app" do
-  strip_optional_initiatives_stubs!(File.expand_path("spec/decidim_dummy_app", __dir__))
+task :test_app do
+  Bundler.with_original_env do
+    generate_decidim_app(
+      "spec/decidim_dummy_app",
+      "--app_name",
+      "#{base_app_name}_test_app",
+      "--path",
+      "../..",
+      "--skip_spring",
+      "--demo",
+      "--force_ssl",
+      "false",
+      "--locales",
+      "en,fr,es"
+    )
+  end
+  install_module("spec/decidim_dummy_app")
 end
 
 desc "Generates a development app."

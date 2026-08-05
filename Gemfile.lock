@@ -933,8 +933,8 @@ DEPENDENCIES
   bootsnap (~> 1.23)
   brakeman (~> 8.0)
   byebug (~> 13.0)
-  decidim (~> 0.32.0)
-  decidim-dev (~> 0.32.0)
+  decidim (~> 0.32)
+  decidim-dev (~> 0.32)
   decidim-toggle!
   faker (~> 3.6)
   letter_opener_web (~> 3.0)
