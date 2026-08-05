@@ -31,6 +31,7 @@ cd website && yarn build
 |-------|---------|
 | All | `./bin/check` (RuboCop, erb_lint, RSpec) |
 | RSpec | `unset DATABASE_URL && RAILS_ENV=test bundle exec rspec` |
+| CI-parity RSpec | `docker compose -f docker-compose.ci.yml run --rm rspec` |
 | Docs | `cd website && yarn build` |
 
 ## Deep dives

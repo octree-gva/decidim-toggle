@@ -32,7 +32,7 @@ task :test_app do
       "en,fr,es"
     )
   end
-  install_module("spec/decidim_dummy_app")
+  install_deps("spec/decidim_dummy_app")
 end
 
 desc "Generates a development app."
