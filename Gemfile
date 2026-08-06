@@ -14,6 +14,8 @@ DECIDIM_VERSION = "~> 0.32"
 
 gem "bootsnap", "~> 1.23"
 gem "decidim", DECIDIM_VERSION
+# Required by `rake test_app --demo` stubs (DummySignatureHandler, etc.)
+gem "decidim-initiatives", DECIDIM_VERSION
 gem "decidim-toggle", path: "."
 
 gem "puma", ">= 6.3.1"
