@@ -79,7 +79,7 @@ module Decidim
           params = params.dup
           params[:organization] = (params[:organization] || {}).merge(available_locales: attrs[:available_locales].keys.compact_blank)
         end
-        super(params, additional_params)
+        super
       end
 
       def clean_available_locales

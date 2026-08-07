@@ -19,7 +19,7 @@ module Decidim
 
       def self.from_params(params, additional_params = {})
         params = params.to_h.with_indifferent_access if params.respond_to?(:to_h)
-        super(params, additional_params)
+        super
       end
     end
   end

@@ -98,7 +98,7 @@ module Decidim
       private
 
       def duplicate_tab_registration?(tid, form_class, command_class)
-        return false unless Rails.env.development? || Rails.env.test?
+        return false unless Rails.env.local?
         return false unless @form_tabs[tid]
 
         existing = @form_tabs[tid]

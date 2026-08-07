@@ -25,7 +25,7 @@ module Decidim
         prefixed.sub(%r{\A/decidim_toggle/decidim_toggle}, "/decidim_toggle")
       end
 
-      def decidim_toggle_settings_tab_form(organization, tab, &block)
+      def decidim_toggle_settings_tab_form(organization, tab, &)
         tab_form = tab.form_class.from_model(organization)
         if (stored = flash[:decidim_toggle_invalid_settings_tab]) &&
            stored[:organization_id].to_i == organization.id &&
@@ -49,7 +49,7 @@ module Decidim
           safe_join([
                       render("decidim_toggle/system/organizations/settings_tab_active_tab_field", tab:),
                       tf.informative_callouts,
-                      content_tag(:div, class: "form__wrapper") { capture(tf, &block) },
+                      content_tag(:div, class: "form__wrapper") { capture(tf, &) },
                       render("decidim_toggle/system/organizations/settings_tab_submit", form: tf)
                     ])
         end

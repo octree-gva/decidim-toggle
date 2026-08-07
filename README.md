@@ -75,7 +75,7 @@ rails db:migrate
 
 ## Development (this gem)
 
-Docker + `./bin/check` (RuboCop, erblint, RSpec) — see [CONTRIBUTING.md](CONTRIBUTING.md) and [Contribute](https://octree-gva.github.io/decidim-toggle/contributing).
+Docker + `./bin/check` (RuboCop, erb_lint, RSpec) — see [CONTRIBUTING.md](CONTRIBUTING.md) and [Contribute](https://octree-gva.github.io/decidim-toggle/contributing).
 
 ## Support
 
