@@ -50,7 +50,7 @@ module Decidim
       end
 
       config.to_prepare do
-        Decidim::Toggle::ExposeAttributesToJsValidator.validate! if Rails.env.development? || Rails.env.test?
+        Decidim::Toggle::ExposeAttributesToJsValidator.validate! if Rails.env.local?
 
         ActiveSupport.on_load(:action_view) do
           include Decidim::Toggle::SystemSettingsTabHelper

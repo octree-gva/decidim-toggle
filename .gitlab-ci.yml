@@ -1,6 +1,6 @@
 ##
 # Reusable Decidim module CI (aligned with decidim-module-spam_signal).
-# Local pre-push: run ./bin/check from the gem root (RuboCop + erblint + RSpec; see bin/check).
+# Local pre-push: run ./bin/check from the gem root (RuboCop + erb_lint + RSpec; see bin/check).
 # Full pipeline adds Prettier, Crowdin, coverage — see README.md and CONTRIBUTING.md.
 # Required CI/CD variables for Crowdin / publish:
 # - CROWDIN_PERSONAL_TOKEN, CROWDIN_PROJECT_ID, TRANSLATIONBOT_ID,
@@ -43,7 +43,7 @@ services:
 
 ruby::rubocop:
   extends: .development_rules
-  image: ruby:3.2.2
+  image: ruby:3.4.7
   stage: lint
   script:
     - bundle
@@ -51,11 +51,11 @@ ruby::rubocop:
 
 ruby::erb:
   extends: .development_rules
-  image: ruby:3.2.2
+  image: ruby:3.4.7
   stage: lint
   script:
     - bundle
-    - bundle exec erblint --lint-all --enable-all-linters
+    - bundle exec erb_lint --lint-all --enable-all-linters
 
 node::prettier:
   extends: .development_rules
@@ -84,7 +84,7 @@ crowdin::lint:
   allow_failure: true
 
 ruby::rubygem:
-  image: ruby:3.2.2
+  image: ruby:3.4.7
   stage: publish
   script:
     - echo "---" > .credentials
@@ -128,7 +128,7 @@ crowdin::merge_request:
     - git push $ORIGIN HEAD:$BRANCH_NAME -o merge_request.create -o merge_request.target=main
 
 ruby::rspec:
-  image: ruby:3.2.2
+  image: ruby:3.4.7
   stage: test
   extends: .development_rules
   artifacts:
@@ -142,13 +142,15 @@ ruby::rspec:
     DATABASE_USERNAME: "decidim"
     DISABLED_DOCKER_COMPOSE: "true"
     TRAEFIK_REDIS_URL: "redis://localhost:6379/1"
-    NODE_MAJOR: 18
+    NODE_MAJOR: 22
     SIMPLECOV: 1
     CI: 1
   before_script:
     # System specs need Chromium/Chrome + matching chromedriver; plain ruby:* images omit the browser,
     # so chromedriver can exit before binding and Selenium retries until ECONNREFUSED.
-    - apt-get update -qq && apt-get install -y ca-certificates curl gnupg wget
+    # ruby-vips (Active Storage / Decidim) needs libvips; plain ruby:* images omit it,
+    # so rake test_app fails at environment boot with LoadError on libvips.so.42.
+    - apt-get update -qq && apt-get install -y ca-certificates curl gnupg wget libvips42
     - wget -q -O /tmp/google-chrome.deb https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
     - apt-get install -y /tmp/google-chrome.deb || (apt-get -f install -y && apt-get install -y /tmp/google-chrome.deb)
     - rm -f /tmp/google-chrome.deb

@@ -75,7 +75,7 @@ module Decidim
         end
 
         def warn_unsupported_type(value)
-          return unless Rails.env.development? || Rails.env.test?
+          return unless Rails.env.local?
 
           Rails.logger.warn(
             "[decidim-toggle] Skipping unsupported JavaScript config value #{value.class}"

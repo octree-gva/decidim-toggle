@@ -27,14 +27,14 @@ module Decidim
           params = params.dup
           params[:organization] = (params[:organization] || {}).merge(available_authorizations: [])
         end
-        super(params, additional_params)
+        super
       end
 
       def clean_available_authorizations
         @clean_available_authorizations ||= if available_authorizations.blank?
                                               []
                                             else
-                                              available_authorizations.map(&:to_s).select(&:present?)
+                                              available_authorizations.map(&:to_s).compact_blank
                                             end
       end
 
