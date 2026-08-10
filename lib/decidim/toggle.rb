@@ -27,9 +27,11 @@ module Decidim
       GemRegistry.present?(gem_name)
     end
 
-    # True when +decidim-ephemeral_participation+ is loaded (Hash authorizations + ephemeral flag).
+    # True when +decidim-ephemeral_participation+ is in the bundle.
+    # Prefer Bundler over +const_defined?+ (Zeitwerk may not have defined the
+    # constant yet when System settings render).
     def self.ephemeral_participation?
-      Decidim.const_defined?(:EphemeralParticipation)
+      gem_present?("decidim-ephemeral_participation")
     end
 
     # @param organization [Decidim::Organization, nil]

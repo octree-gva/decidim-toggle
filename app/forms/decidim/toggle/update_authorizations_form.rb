@@ -53,7 +53,9 @@ module Decidim
       def self.collection_for_ephemeral_participation_authorization
         return [] unless ephemeral_mode?
 
-        Decidim.authorization_workflows.select(&:ephemerable).map do |workflow|
+        Decidim.authorization_workflows.filter_map do |workflow|
+          next unless workflow.respond_to?(:ephemerable) && workflow.ephemerable
+
           [workflow.name, workflow.description]
         end
       end
