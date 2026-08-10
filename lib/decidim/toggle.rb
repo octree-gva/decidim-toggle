@@ -27,6 +27,11 @@ module Decidim
       GemRegistry.present?(gem_name)
     end
 
+    # True when +decidim-ephemeral_participation+ is loaded (Hash authorizations + ephemeral flag).
+    def self.ephemeral_participation?
+      Decidim.const_defined?(:EphemeralParticipation)
+    end
+
     # @param organization [Decidim::Organization, nil]
     # @param registry_name [Symbol] settings tab registry (default +:organization_settings+)
     # @return [Hash{String => Object}] flat keys like +"decidim_geo.enabled"+

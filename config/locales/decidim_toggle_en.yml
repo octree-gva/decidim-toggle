@@ -24,6 +24,7 @@ en:
         authorizations_tab:
           legend: "Verification workflows"
           hint: "Choose which verification methods participants can use in this organization."
+          ephemeral_hint: "Optionally pick one ephemerable workflow that allows participation without registering (decidim-ephemeral_participation)."
         language_tab:
           legend: "Available and default locale"
           locale: "Locale"
@@ -47,6 +48,7 @@ en:
   activemodel:
     attributes:
       organization:
+        ephemeral_participation_authorization: "Ephemeral participation authorization"
         helptext:
           "default-src": "Fallback directive used when no other *-src directive matches. Mostly used to set a secure baseline for all resource types. Examples: 'self' https: ; 'none' ; 'self' https: data:"
           "img-src": "Sources allowed to load images (e.g. <img>, favicons, CSS background images). Use for image CDNs or when you need data/blob URIs. Examples: 'self' https: data: blob: ; https://*.fbcdn.net https://*.instagram.com"

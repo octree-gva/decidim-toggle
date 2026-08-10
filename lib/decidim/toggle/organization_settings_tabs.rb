@@ -5,12 +5,10 @@ module Decidim
     # Registers default system organization settings tabs.
     #
     # Extension contract: the authorizations tab uses the stable identifier
-    # +:authorizations+ (vanilla Decidim: string array of verification workflow names).
-    # Another engine may register an additional +Decidim::Toggle.settings_tabs+
-    # block **after** +decidim_toggle.organization_settings_tabs+ and call
-    # +remove_tab(:authorizations)+ then +add_tab(:authorizations, ...)+ with the
-    # same identifier to replace the tab. The last +register_form_tab+ for that id
-    # wins; see {Decidim::Toggle::SettingsTabRegistry#register_form_tab}.
+    # +:authorizations+. Vanilla Decidim persists a string array of workflow names.
+    # When +Decidim::EphemeralParticipation+ is loaded, Toggle persists a Hash with
+    # +allow_ephemeral_participation+ (see {UpdateAuthorizationsForm}).
+    # Another engine may still +remove_tab(:authorizations)+ then +add_tab+ to replace it.
     class OrganizationSettingsTabs
       def self.register!
         scope = "decidim_toggle.system.organizations.settings_tabs"
