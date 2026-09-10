@@ -60,6 +60,14 @@ module Decidim
         end
       end
 
+      def collection_for_available_authorizations
+        self.class.collection_for_available_authorizations
+      end
+
+      def collection_for_ephemeral_participation_authorization
+        self.class.collection_for_ephemeral_participation_authorization
+      end
+
       def self.from_params(params, additional_params = {})
         params = params.to_h.with_indifferent_access if params.respond_to?(:to_h)
         attrs = params[:organization] || params

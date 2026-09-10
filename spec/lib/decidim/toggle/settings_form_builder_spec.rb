@@ -129,6 +129,24 @@ module Decidim
         expect(build_builder(authorizations_form).all_fields).to include('type="checkbox"')
       end
 
+      it "prefers instance collection methods over class methods" do
+        form_class = Class.new(Decidim::Form) do
+          attribute :tags, [String]
+
+          def self.collection_for_tags
+            [%w(class ClassLabel)]
+          end
+
+          def collection_for_tags
+            [%w(instance InstanceLabel)]
+          end
+        end
+        html = build_builder(form_class.from_params(organization: { tags: ["instance"] })).all_fields
+
+        expect(html).to include("InstanceLabel")
+        expect(html).not_to include("ClassLabel")
+      end
+
       it "renders select_for collections as select dropdowns" do
         form_class = Class.new(Decidim::Form) do
           attribute :mode, :string
