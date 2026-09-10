@@ -18,7 +18,7 @@ module Decidim
 
         context "when ephemeral participation is loaded" do
           before do
-            allow(Decidim::Toggle).to receive(:ephemeral_participation?).and_return(true)
+            allow(Decidim::Toggle).to receive(:ephemeral_authorizations_hash?).and_return(true)
           end
 
           it "loads enabled names and the ephemeral workflow from a Hash" do
@@ -59,9 +59,26 @@ module Decidim
           expect(form.clean_available_authorizations).to eq(%w(dummy_authorization_handler))
         end
 
-        context "when ephemeral participation is loaded" do
+        context "when the ephemeral gem is loaded but the column is still a string array" do
           before do
             allow(Decidim::Toggle).to receive(:ephemeral_participation?).and_return(true)
+          end
+
+          it "returns handler names, not a Hash" do
+            form = described_class.from_params(
+              organization: {
+                available_authorizations: %w(dummy_authorization_handler),
+                ephemeral_participation_authorization: "dummy_authorization_handler"
+              }
+            )
+
+            expect(form.clean_available_authorizations).to eq(%w(dummy_authorization_handler))
+          end
+        end
+
+        context "when ephemeral participation is loaded" do
+          before do
+            allow(Decidim::Toggle).to receive(:ephemeral_authorizations_hash?).and_return(true)
           end
 
           it "returns a Hash with the ephemeral flag" do
@@ -92,7 +109,7 @@ module Decidim
 
         context "when ephemeral participation is loaded" do
           before do
-            allow(Decidim::Toggle).to receive(:ephemeral_participation?).and_return(true)
+            allow(Decidim::Toggle).to receive(:ephemeral_authorizations_hash?).and_return(true)
           end
 
           it "rejects an ephemeral workflow that is not enabled" do

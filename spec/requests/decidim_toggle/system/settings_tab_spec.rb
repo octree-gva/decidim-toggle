@@ -65,6 +65,28 @@ describe "DecidimToggle::System::SettingsTabController" do
     end
   end
 
+  describe "PATCH authorizations tab" do
+    let(:path) { "/decidim_toggle/system/organizations/#{organization.id}/settings_tab/authorizations" }
+    let(:update_params) do
+      {
+        organization: {
+          available_authorizations: %w(dummy_authorization_handler),
+          ephemeral_participation_authorization: "dummy_authorization_handler"
+        }
+      }
+    end
+
+    it "persists handler names as a string array" do
+      allow(Decidim::Toggle).to receive(:ephemeral_participation?).and_return(true)
+
+      patch path, params: update_params
+
+      expect(response).to redirect_to(decidim_system.edit_organization_path(organization))
+      expect(flash[:notice]).to eq(I18n.t("decidim_toggle.system.organizations.form_tab.success"))
+      expect(organization.reload.available_authorizations).to eq(%w(dummy_authorization_handler))
+    end
+  end
+
   describe "PATCH name tab" do
     let(:path) { "/decidim_toggle/system/organizations/#{organization.id}/settings_tab/name" }
     let(:valid_params) do

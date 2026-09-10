@@ -5,7 +5,7 @@
     <p class="text-sm text-gray-2 mb-4"><%= t("decidim_toggle.system.organizations.authorizations_tab.hint") %></p>
     <%= tf.fields_for_names(:available_authorizations) %>
 
-    <% if Decidim::Toggle.ephemeral_participation? %>
+    <% if Decidim::Toggle.ephemeral_authorizations_hash? %>
       <p class="text-sm text-gray-2 mb-4 mt-6">
         <%= t("decidim_toggle.system.organizations.authorizations_tab.ephemeral_hint") %>
       </p>
