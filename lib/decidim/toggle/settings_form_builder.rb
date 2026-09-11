@@ -135,18 +135,26 @@ module Decidim
       end
 
       def field_wrapper_classes(name)
-        classes = ["field"]
-        classes << collection_field_modifier(name)
-        classes << "is-disabled" if attribute_disabled?(name)
-        classes.compact.join(" ")
+        [
+          "field",
+          "field--#{name.to_s.underscore}",
+          field_type_modifier(name),
+          ("is-disabled" if attribute_disabled?(name))
+        ].compact.join(" ")
       end
 
-      # Modifiers for collection checkboxes/radios belong on the wrapper, not inputs
+      def field_type_modifier(name)
+        return "field--select" if select_collection_for(name)
+        return collection_field_modifier(name) if collection_for(name)
+        return "field--checkbox" if attribute_type(name) == :boolean
+        return "field--textarea" if textarea?(name)
+
+        "field--text"
+      end
+
+      # Collection checkboxes/radios belong on the wrapper, not inputs
       # (Rails collection_* html_options attach to each input).
       def collection_field_modifier(name)
-        return nil if select_collection_for(name)
-        return nil unless collection_for(name)
-
         attribute_type(name) == :array ? "field--checkboxes" : "field--radios"
       end
 

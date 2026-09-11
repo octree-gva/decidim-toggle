@@ -143,7 +143,7 @@ end
 
 Disabled inputs are not submitted; keep your command aligned (ignore or reject unknown params).
 
-The field wrapper gets `class="field is-disabled"` (Decidim convention) so you can style muted labels/inputs in CSS.
+The field wrapper is BEM: `field field--<attribute> field--<type>` (`--checkbox`, `--checkboxes`, `--radios`, `--text`, `--textarea`, `--select`). Disabled fields also get `is-disabled` (Decidim convention) so you can style muted labels/inputs in CSS.
 
 ## Builder methods
 

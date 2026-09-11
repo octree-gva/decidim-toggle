@@ -87,7 +87,7 @@ module Decidim
         expect(html).to include('name="organization[enabled]"')
         expect(html).not_to include('organization[enabled]" disabled')
         expect(html).to include('name="organization[locked]" disabled="disabled"')
-        expect(html).to include('class="field is-disabled"')
+        expect(html).to include('class="field field--locked field--checkbox is-disabled"')
       end
 
       it "disables fields with disable if_unchecked and exposes data for JS" do
@@ -105,7 +105,7 @@ module Decidim
         expect(html).to include('name="organization[api_key]"')
         expect(html).to include('disabled="disabled"')
         expect(html).to include('data-disabled-if-unchecked="organization_enabled"')
-        expect(html).to include('class="field is-disabled"')
+        expect(html).to include('class="field field--api_key field--text is-disabled"')
       end
 
       it "renders boolean fields, text areas, and collection inputs" do
@@ -162,6 +162,7 @@ module Decidim
         expect(html).to include("Live")
         expect(html).to include("Draft")
         expect(html).not_to include('type="radio"')
+        expect(html).to include('class="field field--mode field--select"')
       end
 
       it "puts field--radios / field--checkboxes on the wrapper, not inputs" do
@@ -173,7 +174,7 @@ module Decidim
           end
         end
         radio_html = build_builder(radio_form_class.from_params(organization: { priority: "original" })).all_fields
-        expect(radio_html).to include('class="field field--radios"')
+        expect(radio_html).to include('class="field field--priority field--radios"')
         expect(radio_html).to include('class="radio-field"')
         expect(radio_html).not_to match(/<input[^>]*class="[^"]*field--radios/)
 
@@ -185,7 +186,7 @@ module Decidim
           end
         end
         checkbox_html = build_builder(checkbox_form_class.from_params(organization: { tags: ["a"] })).all_fields
-        expect(checkbox_html).to include('class="field field--checkboxes"')
+        expect(checkbox_html).to include('class="field field--tags field--checkboxes"')
         expect(checkbox_html).to include('class="checkbox-field"')
         expect(checkbox_html).not_to match(/<input[^>]*class="[^"]*field--checkboxes/)
       end
@@ -203,6 +204,7 @@ module Decidim
 
         expect(html).to include("<textarea")
         expect(html).to include('cols="40"')
+        expect(html).to include('class="field field--notes field--textarea"')
       end
     end
   end
