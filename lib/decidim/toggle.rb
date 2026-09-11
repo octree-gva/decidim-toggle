@@ -2,6 +2,7 @@
 
 require "decidim/toggle/version"
 require "decidim/toggle/gem_registry"
+require "decidim/toggle/authorization_workflows"
 require "decidim/toggle/settings_tab_registry"
 require "decidim/toggle/settings_tab_item"
 require "decidim/toggle/settings_tabs"
@@ -19,6 +20,14 @@ module Decidim
   module Toggle
     def self.settings_tabs(name, &)
       SettingsTabRegistry.register(name, &)
+    end
+
+    def self.filter_authorization_workflows(&)
+      AuthorizationWorkflows.add_filter(&)
+    end
+
+    def self.authorization_workflows_for(organization)
+      AuthorizationWorkflows.for(organization)
     end
 
     # @param gem_name [String, Symbol] Bundler gem name (e.g. +"decidim-space_page"+)

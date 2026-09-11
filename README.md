@@ -53,6 +53,8 @@ end
 
 3. **Read** — `Decidim::Toggle.config_for(organization, :my_module)`.
 
+To filter System authorization workflows from another gem, use `Decidim::Toggle.filter_authorization_workflows` — do not prepend `UpdateAuthorizationsForm`.
+
 Optional view partial: `form_layout_partial:` on `add_tab` — see [Customize views](https://octree-gva.github.io/decidim-toggle/integrate/customize-views).
 
 Full walkthrough: [Add a settings tab](https://octree-gva.github.io/decidim-toggle/integrate/quickstart).

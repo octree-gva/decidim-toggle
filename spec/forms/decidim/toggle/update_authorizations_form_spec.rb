@@ -80,6 +80,20 @@ module Decidim
         end
       end
 
+      describe "#collection_for_available_authorizations" do
+        after { Decidim::Toggle::AuthorizationWorkflows.reset_filters! }
+
+        it "hides workflows rejected by a registered filter" do
+          Decidim::Toggle.filter_authorization_workflows do |workflow, _organization|
+            workflow.name != "dummy_authorization_handler"
+          end
+
+          names = described_class.from_model(organization).collection_for_available_authorizations.map(&:first)
+
+          expect(names).not_to include("dummy_authorization_handler")
+        end
+      end
+
       describe "validations" do
         it "rejects authorization names that are not registered workflows" do
           form = described_class.from_params(

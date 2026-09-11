@@ -63,6 +63,18 @@ end
 
 `id` and per-locale keys (e.g. `name_en`) are excluded from `all_fields` when they belong to a translatable hash.
 
+## Filter authorization workflows
+
+Do not prepend `Decidim::Toggle::UpdateAuthorizationsForm`. Register a filter so the System authorizations tab only lists workflows your module allows:
+
+```ruby
+Decidim::Toggle.filter_authorization_workflows do |workflow, organization|
+  MyModule.workflow_allowed?(workflow, organization)
+end
+```
+
+Instance `collection_for_available_authorizations` (and the ephemeral picker collection) uses `Decidim::Toggle.authorization_workflows_for(organization)`.
+
 ## Collections
 
 Add `collection_for_<attribute_name>` returning `[[value, label], ...]`:

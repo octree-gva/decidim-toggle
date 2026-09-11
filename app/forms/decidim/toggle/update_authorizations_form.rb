@@ -21,11 +21,12 @@ module Decidim
       end
 
       def self.from_model(organization)
-        if Decidim::Toggle.ephemeral_participation?
-          from_model_ephemeral(organization)
-        else
-          from_model_vanilla(organization)
-        end
+        form = if Decidim::Toggle.ephemeral_participation?
+                 from_model_ephemeral(organization)
+               else
+                 from_model_vanilla(organization)
+               end
+        form.with_context(current_organization: organization)
       end
 
       def self.ephemerable_workflow?(workflow)
@@ -65,11 +66,13 @@ module Decidim
       end
 
       def collection_for_available_authorizations
-        self.class.collection_for_available_authorizations
+        workflow_pairs(Decidim::Toggle.authorization_workflows_for(current_organization))
       end
 
       def collection_for_ephemeral_participation_authorization
-        self.class.collection_for_ephemeral_participation_authorization
+        return [] unless self.class.ephemeral_mode?
+
+        workflow_pairs(ephemerable_workflows)
       end
 
       def self.from_params(params, additional_params = {})
@@ -109,6 +112,16 @@ module Decidim
       end
 
       private
+
+      def workflow_pairs(workflows)
+        workflows.map { |workflow| [workflow.name, workflow.description] }
+      end
+
+      def ephemerable_workflows
+        Decidim::Toggle.authorization_workflows_for(current_organization).select do |workflow|
+          self.class.ephemerable_workflow?(workflow)
+        end
+      end
 
       def clean_vanilla_array
         return [] if available_authorizations.blank?

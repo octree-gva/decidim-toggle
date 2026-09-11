@@ -69,6 +69,8 @@ Decidim::Toggle.save_config!(organization, :my_module, { "enabled" => true })
 
 When settings live on `Decidim::Organization` (SMTP, host, locales, …), use a custom `Decidim::Form` + custom `Decidim::Command` with the same `add_tab` contract. See built-in tabs in `lib/decidim/toggle/organization_settings_tabs.rb`.
 
+To hide verification workflows on the Authorizations tab, register `Decidim::Toggle.filter_authorization_workflows` — see [Filter authorization workflows](./attributes.md#filter-authorization-workflows). Do not prepend `UpdateAuthorizationsForm`.
+
 ## See also
 
 - [Integrate](./index.md)
