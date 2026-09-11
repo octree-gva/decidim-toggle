@@ -206,6 +206,42 @@ module Decidim
         expect(html).to include('cols="40"')
         expect(html).to include('class="field field--notes field--textarea"')
       end
+
+      it "masks stored secrets and renders an empty password field" do
+        organization = create(:organization)
+        EncryptedSettingsForm.persist_secret!(organization, "secret")
+        form = EncryptedSettingsForm.form_class
+                                    .from_model(organization)
+                                    .with_context(current_organization: organization)
+        html = build_builder(form).all_fields
+        ciphertext = OrganizationModuleConfig.find_by!(
+          decidim_organization_id: organization.id,
+          module_name: "decidim_toggle_secret"
+        ).config["api_key"]
+        password = Nokogiri::HTML.fragment(html).at_css('input[type="password"]')
+
+        expect(html).to include("******")
+        expect(html).to include("edit secret")
+        expect(html).to include('data-edit-secret="true"')
+        expect(html).not_to include(ciphertext)
+        expect(password["name"]).to eq("organization[api_key]")
+        expect(password["value"].to_s).to eq("")
+        expect(password["hidden"]).to be_present
+      end
+
+      it "shows the last four characters when the secret is longer than 32" do
+        organization = create(:organization)
+        plaintext = "abcdefghijklmnopqrstuvwxyz0123456789"
+        EncryptedSettingsForm.persist_secret!(organization, plaintext)
+        form = EncryptedSettingsForm.form_class
+                                    .from_model(organization)
+                                    .with_context(current_organization: organization)
+        html = build_builder(form).all_fields
+
+        expect(html).to include("6789")
+        expect(html).not_to include("*" * plaintext.length)
+        expect(html).not_to include(plaintext)
+      end
     end
   end
 end

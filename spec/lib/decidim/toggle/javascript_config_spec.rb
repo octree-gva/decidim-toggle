@@ -22,8 +22,9 @@ module Decidim
             attribute :search_bar, :boolean
             attribute :tags, [String]
             attribute :secret, :string
+            encrypted :secret
 
-            expose_to_javascript :enabled, :search_bar, :tags
+            expose_to_javascript :enabled, :search_bar, :tags, :secret
           end
 
           other_form_class = Class.new(Decidim::Form) do
@@ -79,6 +80,7 @@ module Decidim
           "decidim_geo.tags" => %w(a b),
           "decidim_other.mode" => "live"
         )
+        expect(described_class.for(organization, registry_name:)).not_to have_key("decidim_geo.secret")
       end
 
       it "skips forms without ExposeAttributesToJs" do

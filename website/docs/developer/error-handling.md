@@ -23,7 +23,7 @@ On `:invalid`, the controller stores a payload in `flash[:decidim_toggle_invalid
 {
   organization_id:,
   tab_id:,
-  params: { ... submitted organization params ... },
+  params: { ... submitted organization params, encrypted keys stripped ... },
   errors: { "attribute" => ["message", ...] }
 }
 ```

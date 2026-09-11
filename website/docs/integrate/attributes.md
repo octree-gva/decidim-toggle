@@ -29,6 +29,7 @@ module MyModule
     attribute :tags, [String]
 
     disable :api_key, if_unchecked: :enabled
+    encrypted :api_key
 
     def self.select_for_mode
       [%w[live Live], %w[draft Draft]]
@@ -60,6 +61,7 @@ end
 | Scalar + `select_for_x` | Dropdown (`<select>`) | Prefer over `collection_for_x` when both exist |
 | `translatable_attribute :x, String` | Translated field | Requires `Decidim::TranslatableAttributes`; locale keys hidden from `all_fields` |
 | `translatable_attribute :x, Decidim::Attributes::RichText` | Translated editor | Rich text per locale |
+| `encrypted :x` plus `attribute :x, :string` | Mask + empty password | Stored with `Decidim::AttributeEncryptor`; never sent to `window.DecidimToggle` |
 
 `id` and per-locale keys (e.g. `name_en`) are excluded from `all_fields` when they belong to a translatable hash.
 
@@ -155,7 +157,18 @@ end
 
 Disabled inputs are not submitted; keep your command aligned (ignore or reject unknown params).
 
-The field wrapper is BEM: `field field--<attribute> field--<type>` (`--checkbox`, `--checkboxes`, `--radios`, `--text`, `--textarea`, `--select`). Disabled fields also get `is-disabled` (Decidim convention) so you can style muted labels/inputs in CSS.
+The field wrapper is BEM: `field field--<attribute> field--<type>` (`--checkbox`, `--checkboxes`, `--radios`, `--text`, `--textarea`, `--select`, `--password`). Disabled fields also get `is-disabled` (Decidim convention) so you can style muted labels/inputs in CSS.
+
+## Encrypted strings
+
+Keep the string attribute and register the secret:
+
+```ruby
+attribute :api_key, :string
+encrypted :api_key
+```
+
+`UpdateModuleConfigCommand` encrypts with `Decidim::AttributeEncryptor` and stores `api_key_count` / `api_key_last4` beside the ciphertext. A blank submit omits those keys so the previous secret is kept. `config_for` decrypts for Ruby callers. The admin UI shows a non-editable mask (`*` per character, or the last four characters when length is greater than 32) and an **edit secret** link that reveals an empty password field.
 
 ## Builder methods
 

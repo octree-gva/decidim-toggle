@@ -12,6 +12,8 @@ module Decidim
     #     self.module_config_name = "decidim_geo"
     #     mimic :organization
     #     attribute :enabled, :boolean
+    #     attribute :api_key, :string
+    #     encrypted :api_key
     #   end
     module ModuleConfigForm
       extend ActiveSupport::Concern
@@ -29,11 +31,19 @@ module Decidim
             module_name: module_config_name
           )&.config || {}
 
-          from_params(organization: raw).with_context(current_organization: organization)
+          build_from_raw(organization, raw)
+        end
+
+        def build_from_raw(organization, raw)
+          form = from_params(organization: raw).with_context(current_organization: organization)
+          EncryptedAttributes.clear_plaintext!(form)
+          form
         end
       end
 
       included do
+        include EncryptedAttributes
+
         class_attribute :module_config_name, instance_accessor: false
       end
     end

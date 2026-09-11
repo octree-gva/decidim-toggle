@@ -16,7 +16,7 @@ module Decidim
         Decidim::Toggle.save_config!(
           organization,
           form.class.module_config_name,
-          form.to_h
+          persistable_config
         )
         broadcast(:ok)
       rescue ActiveRecord::RecordInvalid
@@ -26,6 +26,12 @@ module Decidim
       private
 
       attr_reader :organization, :form
+
+      def persistable_config
+        return form.to_persisted_config if form.respond_to?(:to_persisted_config)
+
+        form.to_h
+      end
     end
   end
 end

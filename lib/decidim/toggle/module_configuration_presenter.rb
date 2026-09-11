@@ -41,9 +41,28 @@ module Decidim
         end
       end
 
-      def normalize(value, _attr_name, type)
-        return value unless value.nil?
+      def normalize(value, attr_name, type)
+        nil_default(decrypt_attribute(value, attr_name), type)
+      end
 
+      def encrypted_name?(attr_name)
+        klass = @form.class
+        klass.respond_to?(:encrypted_attribute?) && klass.encrypted_attribute?(attr_name)
+      end
+
+      def decrypt_attribute(value, attr_name)
+        return value unless encrypted_name?(attr_name)
+        return value if value.blank?
+
+        Decidim::AttributeEncryptor.decrypt(value) || value
+      rescue ActiveSupport::MessageEncryptor::InvalidMessage,
+             ActiveSupport::MessageVerifier::InvalidSignature,
+             ArgumentError
+        value
+      end
+
+      def nil_default(value, type)
+        return value unless value.nil?
         return [] if type.try(:type) == :array
         return {} if type.try(:type) == :hash
         return false if type.is_a?(ActiveModel::Type::Boolean)

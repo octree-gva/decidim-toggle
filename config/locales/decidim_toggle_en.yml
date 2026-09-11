@@ -21,6 +21,7 @@ en:
           save: "Save"
           cancel: "Cancel"
           success: "Settings updated successfully."
+          edit_secret: "edit secret"
         authorizations_tab:
           legend: "Verification workflows"
           hint: "Choose which verification methods participants can use in this organization."

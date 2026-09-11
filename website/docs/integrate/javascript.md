@@ -10,7 +10,7 @@ Opt in per attribute to expose config on `window.DecidimToggle`. By default, set
 
 ## Opt in on the form
 
-Include `Decidim::Toggle::ExposeAttributesToJs` and list attributes explicitly — secrets are **not** exposed unless you add them.
+Include `Decidim::Toggle::ExposeAttributesToJs` and list attributes explicitly. Attributes declared with `encrypted :name` are **never** added to `window.DecidimToggle`, even if listed here.
 
 ```ruby
 module MyModule

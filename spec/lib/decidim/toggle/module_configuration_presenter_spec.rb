@@ -48,6 +48,17 @@ module Decidim
         p = build_presenter(enabled: nil, tags: nil, meta: nil)
         expect(p.to_config_hash).to eq("enabled" => false, "tags" => [], "meta" => {})
       end
+
+      it "decrypts encrypted attributes for config consumers" do
+        secret_form_class = EncryptedSettingsForm.form_class
+        ciphertext = Decidim::AttributeEncryptor.encrypt("plain-secret")
+        form = secret_form_class.from_params(organization: { api_key: ciphertext })
+                                .with_context(current_organization: organization)
+        presenter = described_class.new(form)
+
+        expect(presenter.api_key).to eq("plain-secret")
+        expect(presenter.to_config_hash["api_key"]).to eq("plain-secret")
+      end
     end
   end
 end

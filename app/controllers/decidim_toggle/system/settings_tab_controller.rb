@@ -20,12 +20,7 @@ module DecidimToggle
           end
 
           on(:invalid) do
-            flash[:decidim_toggle_invalid_settings_tab] = {
-              organization_id: @organization.id,
-              tab_id: params[:tab_id].to_s,
-              params: params.fetch(:organization, {}).permit!.to_h,
-              errors: @form.errors.messages.transform_keys(&:to_s).transform_values { |messages| messages.map(&:to_s) }
-            }
+            flash[:decidim_toggle_invalid_settings_tab] = invalid_tab_flash
             redirect_to settings_tab_redirect_target
           end
         end
@@ -40,6 +35,26 @@ module DecidimToggle
 
       def registry
         Decidim::Toggle::SettingsTabRegistry.find(:organization_settings)
+      end
+
+      def invalid_tab_flash
+        {
+          organization_id: @organization.id,
+          tab_id: params[:tab_id].to_s,
+          params: sanitized_organization_params,
+          errors: form_error_messages
+        }
+      end
+
+      def sanitized_organization_params
+        Decidim::Toggle::EncryptedAttributes.strip_submitted_secrets(
+          params.fetch(:organization, {}).permit!.to_h,
+          @form.class
+        )
+      end
+
+      def form_error_messages
+        @form.errors.messages.transform_keys(&:to_s).transform_values { |messages| messages.map(&:to_s) }
       end
 
       def settings_tab_redirect_target

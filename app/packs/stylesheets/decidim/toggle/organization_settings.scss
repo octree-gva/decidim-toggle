@@ -90,6 +90,19 @@
     @apply mb-0;
   }
 
+  .encrypted-secret-mask {
+    @apply mt-1.5 mb-1.5 py-0.5 px-2 block;
+  }
+
+  .field.is-editing-secret .encrypted-secret-mask,
+  .field.is-editing-secret [data-edit-secret-toggle] {
+    display: none !important;
+  }
+
+  a.text-link {
+    @apply text-sm text-secondary underline inline-block mt-1 cursor-pointer;
+  }
+
   .form__wrapper .field.is-disabled {
     @apply cursor-not-allowed;
     label,

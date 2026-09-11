@@ -33,6 +33,8 @@ module Decidim
 
         def merge_exposed_attributes!(flat_config, module_name, module_config, form_class, exposed)
           exposed.each do |attr|
+            next if skip_exposed_attribute?(form_class, attr)
+
             type = form_class.attribute_types[attr]
             raw = module_config[attr]
             value = serialize_value(raw, type)
@@ -40,6 +42,10 @@ module Decidim
 
             flat_config["#{module_name}.#{attr}"] = value
           end
+        end
+
+        def skip_exposed_attribute?(form_class, attr)
+          form_class.respond_to?(:encrypted_attribute?) && form_class.encrypted_attribute?(attr)
         end
 
         def serialize_value(value, _type)

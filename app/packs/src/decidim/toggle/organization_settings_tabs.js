@@ -112,11 +112,35 @@ function initDisableConditions(container) {
     });
 }
 
+function revealSecretField(field, toggle) {
+  const input = field.querySelector("input[type=password]");
+  field.classList.add("is-editing-secret");
+  if (input) {
+    input.hidden = false;
+    input.removeAttribute("hidden");
+    input.focus();
+  }
+  toggle?.setAttribute("hidden", "hidden");
+}
+
+function initEditSecrets(container) {
+  container.querySelectorAll("[data-edit-secret]").forEach((field) => {
+    const toggle = field.querySelector("[data-edit-secret-toggle]");
+    if (!toggle) return;
+
+    toggle.addEventListener("click", (event) => {
+      event.preventDefault();
+      revealSecretField(field, toggle);
+    });
+  });
+}
+
 function initContainer(container) {
   const trigger = initialTrigger(container);
   if (trigger) activateTab(container, trigger, { scrollBehavior: "auto" });
 
   initDisableConditions(container);
+  initEditSecrets(container);
 
   container.addEventListener("click", (event) => {
     const button = event.target.closest(".tab-x[data-controls]");

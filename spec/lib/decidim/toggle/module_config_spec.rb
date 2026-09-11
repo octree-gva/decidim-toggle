@@ -68,6 +68,23 @@ module Decidim
           result = described_class.config_for(organization, :decidim_geo, registry_name: :module_config_spec)
           expect(result[:enabled]).to be(false)
         end
+
+        it "decrypts encrypted attributes when a form is registered" do
+          form_class = EncryptedSettingsForm.form_class
+          SettingsTabRegistry.register(:module_config_spec) do |tabs|
+            tabs.add_tab :secret, "Secret", form: form_class, command: Integer, module_name: :decidim_toggle_secret
+          end
+
+          ciphertext = Decidim::AttributeEncryptor.encrypt("from-config")
+          described_class.save_config!(
+            organization,
+            :decidim_toggle_secret,
+            { "api_key" => ciphertext, "api_key_count" => 11, "api_key_last4" => "onfig" }
+          )
+
+          result = described_class.config_for(organization, :decidim_toggle_secret, registry_name: :module_config_spec)
+          expect(result[:api_key]).to eq("from-config")
+        end
       end
     end
   end

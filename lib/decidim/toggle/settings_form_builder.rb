@@ -84,6 +84,12 @@ module Decidim
       end
 
       def build_input_field(name)
+        return encrypted_input_field(name) if encrypted_attribute?(name)
+
+        unencrypted_input_field(name)
+      end
+
+      def unencrypted_input_field(name)
         options = field_html_options_for(name)
 
         if (select_collection = select_collection_for(name))
@@ -144,6 +150,7 @@ module Decidim
       end
 
       def field_type_modifier(name)
+        return "field--password" if encrypted_attribute?(name)
         return "field--select" if select_collection_for(name)
         return collection_field_modifier(name) if collection_for(name)
         return "field--checkbox" if attribute_type(name) == :boolean
@@ -159,11 +166,67 @@ module Decidim
       end
 
       def field_wrapper_data(name)
+        data = {}
         condition = disable_condition_for(name)
-        return {} if condition.blank?
+        data[:disabled_if_unchecked] = "#{sanitized_object_name}_#{condition[:if_unchecked]}" if condition
+        data[:edit_secret] = true if encrypted_attribute?(name)
+        data
+      end
 
-        controller = condition[:if_unchecked]
-        { disabled_if_unchecked: "#{sanitized_object_name}_#{controller}" }
+      def encrypted_attribute?(name)
+        object.class.respond_to?(:encrypted_attribute?) && object.class.encrypted_attribute?(name)
+      end
+
+      def encrypted_input_field(name)
+        parts = [password_field(name, encrypted_password_options(name))]
+        parts << encrypted_mask_markup(name)
+        parts << encrypted_edit_link if encrypted_mask_text(name).present?
+        @template.safe_join(parts)
+      end
+
+      def encrypted_password_options(name)
+        options = field_html_options_for(name).merge(value: "")
+        return options if encrypted_mask_text(name).blank?
+
+        options.merge(hidden: true)
+      end
+
+      def encrypted_mask_text(name)
+        EncryptedAttributes.mask_for(
+          stored_module_config["#{name}_count"],
+          stored_module_config["#{name}_last4"]
+        )
+      end
+
+      def encrypted_mask_markup(name)
+        text = encrypted_mask_text(name)
+        return "".html_safe if text.blank?
+
+        @template.content_tag(:span, text, class: "encrypted-secret-mask", data: { edit_secret_mask: true })
+      end
+
+      def encrypted_edit_link
+        @template.link_to(
+          I18n.t("decidim_toggle.system.organizations.form_tab.edit_secret"),
+          "#",
+          class: "text-link",
+          data: { edit_secret_toggle: true }
+        )
+      end
+
+      def stored_module_config
+        @stored_module_config ||= load_stored_module_config
+      end
+
+      def load_stored_module_config
+        organization = object.try(:current_organization)
+        module_name = object.class.try(:module_config_name)
+        return {} if organization.blank? || module_name.blank?
+
+        OrganizationModuleConfig.find_by(
+          decidim_organization_id: organization.id,
+          module_name:
+        )&.config || {}
       end
 
       def sanitized_object_name

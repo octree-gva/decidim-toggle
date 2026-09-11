@@ -34,6 +34,7 @@ module Decidim
           flash.delete(:decidim_toggle_invalid_settings_tab)
           tab_form = tab.form_class.from_params(organization: stored[:params])
           tab_form = tab_form.with_context(current_organization: organization) if tab_form.respond_to?(:with_context)
+          EncryptedAttributes.clear_plaintext!(tab_form)
           stored[:errors].each do |attribute, messages|
             messages.each { |message| tab_form.errors.add(attribute, message) }
           end

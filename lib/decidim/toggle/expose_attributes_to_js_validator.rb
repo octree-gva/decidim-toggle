@@ -20,12 +20,26 @@ module Decidim
         return unless form_class.included_modules.include?(ExposeAttributesToJs)
 
         form_class.javascript_exposed_attribute_names.each do |attr|
-          next if form_class.attribute_names.include?(attr)
-
-          Rails.logger.warn(
-            "[decidim-toggle] #{form_class} exposes unknown attribute #{attr.inspect} to JS"
-          )
+          warn_unknown_attribute(form_class, attr)
+          warn_encrypted_attribute(form_class, attr)
         end
+      end
+
+      def warn_unknown_attribute(form_class, attr)
+        return if form_class.attribute_names.include?(attr)
+
+        Rails.logger.warn(
+          "[decidim-toggle] #{form_class} exposes unknown attribute #{attr.inspect} to JS"
+        )
+      end
+
+      def warn_encrypted_attribute(form_class, attr)
+        return unless form_class.respond_to?(:encrypted_attribute?)
+        return unless form_class.encrypted_attribute?(attr)
+
+        Rails.logger.warn(
+          "[decidim-toggle] #{form_class} must not expose encrypted attribute #{attr.inspect} to JS"
+        )
       end
     end
   end
