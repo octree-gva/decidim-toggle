@@ -5,8 +5,8 @@ module Decidim
     # Persists organization verification workflows.
     #
     # Vanilla Decidim: +available_authorizations+ is a string array of workflow names.
-    # Persist a Hash only when +decidim-ephemeral_participation+ is loaded *and*
-    # the column is json/jsonb (not a Postgres array).
+    # With +decidim-ephemeral_participation+, persist a Hash with
+    # +allow_ephemeral_participation+ (that gem's jsonb column).
     class UpdateAuthorizationsForm < Decidim::Form
       mimic :organization
 
@@ -17,7 +17,7 @@ module Decidim
       validate :ephemeral_authorization_among_enabled
 
       def self.ephemeral_mode?
-        Decidim::Toggle.ephemeral_authorizations_hash?
+        Decidim::Toggle.ephemeral_participation?
       end
 
       def self.from_model(organization)

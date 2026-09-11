@@ -25,7 +25,7 @@ Internal templates for decidim-toggle. Integrators customize **their** tab via `
 | `_encryption_not_configured_callout.html.erb` | Shown when `encryption_configured?` is false |
 | `tabs/_language_tab.html.erb` | Built-in locale table layout |
 | `tabs/_security_tab.html.erb` | Built-in security layout |
-| `tabs/_authorizations_tab.html.erb` | Built-in authorizations layout. With `decidim-ephemeral_participation` loaded, shows enabled checkboxes and ephemeral radios (persist follows the column: core array vs jsonb Hash). |
+| `tabs/_authorizations_tab.html.erb` | Built-in authorizations layout. With `decidim-ephemeral_participation` loaded, shows enabled checkboxes and ephemeral radios and persists a Hash with `allow_ephemeral_participation`. |
 | `tabs/_file_upload_tab.html.erb` | Built-in file upload layout |
 
 ## Helpers

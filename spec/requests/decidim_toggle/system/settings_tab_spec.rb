@@ -66,7 +66,7 @@ describe "DecidimToggle::System::SettingsTabController" do
   end
 
   describe "GET system organization edit authorizations tab" do
-    it "renders ephemeral radios when the gem is present and the column is an array" do
+    it "renders ephemeral radios when the gem is present" do
       allow(Decidim::Toggle).to receive(:ephemeral_participation?).and_return(true)
 
       get decidim_system.edit_organization_path(organization)
@@ -111,8 +111,6 @@ describe "DecidimToggle::System::SettingsTabController" do
     end
 
     it "persists handler names as a string array" do
-      allow(Decidim::Toggle).to receive(:ephemeral_participation?).and_return(true)
-
       patch path, params: update_params
 
       expect(response).to redirect_to(decidim_system.edit_organization_path(organization))

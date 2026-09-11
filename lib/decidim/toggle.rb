@@ -34,19 +34,6 @@ module Decidim
       gem_present?("decidim-ephemeral_participation")
     end
 
-    # Persist Hash only after the ephemeral gem's jsonb migration. Core keeps a
-    # string array; assigning a Hash raises PG::InvalidTextRepresentation.
-    def self.ephemeral_authorizations_hash?
-      ephemeral_participation? && authorizations_json_column?
-    end
-
-    def self.authorizations_json_column?
-      column = Decidim::Organization.columns_hash["available_authorizations"]
-      return false unless column
-
-      !column.array? && [:json, :jsonb].include?(column.type)
-    end
-
     # @param organization [Decidim::Organization, nil]
     # @param registry_name [Symbol] settings tab registry (default +:organization_settings+)
     # @return [Hash{String => Object}] flat keys like +"decidim_geo.enabled"+
