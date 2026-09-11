@@ -65,6 +65,40 @@ describe "DecidimToggle::System::SettingsTabController" do
     end
   end
 
+  describe "GET system organization edit authorizations tab" do
+    it "renders ephemeral radios when the gem is present and the column is an array" do
+      allow(Decidim::Toggle).to receive(:ephemeral_participation?).and_return(true)
+
+      get decidim_system.edit_organization_path(organization)
+
+      expect(response).to have_http_status(:ok)
+      panel = Nokogiri::HTML(response.body).at_css("#settings_tab_form_authorizations") ||
+              Nokogiri::HTML(response.body).at_css("#panel-toggle-authorizations")
+      expect(panel).to be_present
+      html = panel.to_html
+      expect(html).to include("Workflow")
+      expect(html).to include("Enabled")
+      expect(html).to include("Ephemeral")
+      expect(html).to include('name="organization[ephemeral_participation_authorization]"')
+    end
+
+    it "renders only workflows from the form collection" do
+      allow(Decidim::Toggle).to receive(:ephemeral_participation?).and_return(true)
+      allow(Decidim::Toggle::UpdateAuthorizationsForm).to receive(
+        :collection_for_available_authorizations
+      ).and_return([["dummy_authorization_handler", "Only dummy"]])
+
+      get decidim_system.edit_organization_path(organization)
+
+      panel = Nokogiri::HTML(response.body).at_css("#settings_tab_form_authorizations") ||
+              Nokogiri::HTML(response.body).at_css("#panel-toggle-authorizations")
+      html = panel.to_html
+      expect(html).to include("Only dummy")
+      expect(html).to include('value="dummy_authorization_handler"')
+      expect(html).not_to include("another_dummy_authorization_handler")
+    end
+  end
+
   describe "PATCH authorizations tab" do
     let(:path) { "/decidim_toggle/system/organizations/#{organization.id}/settings_tab/authorizations" }
     let(:update_params) do

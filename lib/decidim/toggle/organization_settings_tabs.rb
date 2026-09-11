@@ -6,9 +6,10 @@ module Decidim
     #
     # Extension contract: the authorizations tab uses the stable identifier
     # +:authorizations+. Vanilla Decidim persists a string array of workflow names.
-    # When +decidim-ephemeral_participation+ is loaded *and* +available_authorizations+
-    # is json/jsonb, Toggle persists a Hash with +allow_ephemeral_participation+.
-    # Otherwise it persists core's string array of handler names.
+    # When +decidim-ephemeral_participation+ is loaded, the tab shows enabled
+    # checkboxes plus one ephemeral radio per ephemerable workflow. Persist a Hash
+    # with +allow_ephemeral_participation+ only when the column is json/jsonb;
+    # otherwise persist core's string array of handler names.
     # Another engine may still +remove_tab(:authorizations)+ then +add_tab+ to replace it.
     class OrganizationSettingsTabs
       def self.register!

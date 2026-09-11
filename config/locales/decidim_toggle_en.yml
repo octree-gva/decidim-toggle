@@ -25,6 +25,9 @@ en:
           legend: "Verification workflows"
           hint: "Choose which verification methods participants can use in this organization."
           ephemeral_hint: "Optionally pick one ephemerable workflow that allows participation without registering (decidim-ephemeral_participation)."
+          workflow: "Workflow"
+          enabled: "Enabled"
+          ephemeral: "Ephemeral"
         language_tab:
           legend: "Available and default locale"
           locale: "Locale"

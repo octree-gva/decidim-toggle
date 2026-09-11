@@ -21,11 +21,15 @@ module Decidim
       end
 
       def self.from_model(organization)
-        if ephemeral_mode?
+        if Decidim::Toggle.ephemeral_participation?
           from_model_ephemeral(organization)
         else
           from_model_vanilla(organization)
         end
+      end
+
+      def self.ephemerable_workflow?(workflow)
+        workflow.respond_to?(:ephemerable) && workflow.ephemerable
       end
 
       def self.from_model_vanilla(organization)
@@ -51,10 +55,10 @@ module Decidim
       end
 
       def self.collection_for_ephemeral_participation_authorization
-        return [] unless ephemeral_mode?
+        return [] unless Decidim::Toggle.ephemeral_participation?
 
         Decidim.authorization_workflows.filter_map do |workflow|
-          next unless workflow.respond_to?(:ephemerable) && workflow.ephemerable
+          next unless ephemerable_workflow?(workflow)
 
           [workflow.name, workflow.description]
         end
@@ -131,7 +135,7 @@ module Decidim
       end
 
       def ephemeral_authorization_among_enabled
-        return unless self.class.ephemeral_mode?
+        return unless Decidim::Toggle.ephemeral_participation?
         return if ephemeral_participation_authorization.blank?
         return if clean_vanilla_array.include?(ephemeral_participation_authorization.to_s)
 

@@ -16,8 +16,24 @@ module Decidim
           expect(form.available_authorizations).to eq(%w(dummy_authorization_handler))
         end
 
+        context "when the ephemeral gem is present" do
+          before do
+            allow(Decidim::Toggle).to receive(:ephemeral_participation?).and_return(true)
+          end
+
+          it "loads workflow names from a string array" do
+            org = create(:organization, available_authorizations: %w(dummy_authorization_handler))
+
+            form = described_class.from_model(org)
+
+            expect(form.available_authorizations).to eq(%w(dummy_authorization_handler))
+            expect(form.ephemeral_participation_authorization).to be_blank
+          end
+        end
+
         context "when ephemeral participation is loaded" do
           before do
+            allow(Decidim::Toggle).to receive(:ephemeral_participation?).and_return(true)
             allow(Decidim::Toggle).to receive(:ephemeral_authorizations_hash?).and_return(true)
           end
 
@@ -107,8 +123,27 @@ module Decidim
           expect(form.errors[:available_authorizations]).to be_present
         end
 
+        context "when the ephemeral gem is present" do
+          before do
+            allow(Decidim::Toggle).to receive(:ephemeral_participation?).and_return(true)
+          end
+
+          it "rejects an ephemeral workflow that is not enabled on an array column" do
+            form = described_class.from_params(
+              organization: {
+                available_authorizations: %w(dummy_authorization_handler),
+                ephemeral_participation_authorization: "another_dummy_authorization_handler"
+              }
+            ).with_context(current_organization: organization)
+
+            expect(form).not_to be_valid
+            expect(form.errors[:ephemeral_participation_authorization]).to be_present
+          end
+        end
+
         context "when ephemeral participation is loaded" do
           before do
+            allow(Decidim::Toggle).to receive(:ephemeral_participation?).and_return(true)
             allow(Decidim::Toggle).to receive(:ephemeral_authorizations_hash?).and_return(true)
           end
 
