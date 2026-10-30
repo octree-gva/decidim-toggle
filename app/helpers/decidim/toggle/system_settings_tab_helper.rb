@@ -28,13 +28,13 @@ module Decidim
       def decidim_toggle_settings_tab_form(organization, tab, &)
         tab_form = tab.form_class.from_model(organization)
         tab_form = tab_form.with_context(current_organization: organization) if tab_form.respond_to?(:with_context)
-        if (stored = flash[:decidim_toggle_invalid_settings_tab]) &&
-           stored[:organization_id].to_i == organization.id &&
-           stored[:tab_id].to_s == tab.identifier.to_s
+        if (stored = flash["decidim_toggle_invalid_settings_tab"]) &&
+           stored["organization_id"].to_i == organization.id &&
+           stored["tab_id"].to_s == tab.identifier.to_s
           flash.delete(:decidim_toggle_invalid_settings_tab)
-          tab_form = tab.form_class.from_params(organization: stored[:params])
+          tab_form = tab.form_class.from_params(organization: stored["params"])
           tab_form = tab_form.with_context(current_organization: organization) if tab_form.respond_to?(:with_context)
-          stored[:errors].each do |attribute, messages|
+          stored["errors"].each do |attribute, messages|
             messages.each { |message| tab_form.errors.add(attribute, message) }
           end
         end
