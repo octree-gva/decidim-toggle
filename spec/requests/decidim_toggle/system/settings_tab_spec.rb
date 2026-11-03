@@ -84,9 +84,9 @@ describe "DecidimToggle::System::SettingsTabController" do
 
     it "renders only workflows from the form collection" do
       allow(Decidim::Toggle).to receive(:ephemeral_participation?).and_return(true)
-      allow(Decidim::Toggle::UpdateAuthorizationsForm).to receive(
-        :collection_for_available_authorizations
-      ).and_return([["dummy_authorization_handler", "Only dummy"]])
+      workflow = Decidim::Verifications.find_workflow_manifest(:dummy_authorization_handler)
+      allow(workflow).to receive(:description).and_return("Only dummy")
+      allow(Decidim::Toggle).to receive(:authorization_workflows_for).and_return([workflow])
 
       get decidim_system.edit_organization_path(organization)
 
